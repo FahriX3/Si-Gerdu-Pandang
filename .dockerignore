@@ -1,9 +1,0 @@
-/node_modules
-/vendor
-/.git
-/.github
-/.env
-/storage/framework/cache
-/storage/framework/sessions
-/storage/framework/views
-/storage/logs
