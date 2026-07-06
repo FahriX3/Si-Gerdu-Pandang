@@ -45,10 +45,14 @@
             <td>: {{ $pasien->no_jkn ?? '-' }}</td>
         </tr>
         <tr>
-            <td class="label">Jenis Prolanis</td>
+            <td class="label">Status Prolanis</td>
             <td>: {{ $pasien->jenis_prolanis ?? '-' }}</td>
+            <td class="label">Status PRB</td>
+            <td>: {{ $pasien->status_peserta_prb ?? '-' }}</td>
+        </tr>
+        <tr>
             <td class="label">Puskesmas Naungan</td>
-            <td>: {{ $pasien->puskesmas->nama_puskesmas ?? '-' }}</td>
+            <td colspan="3">: {{ $pasien->puskesmas->nama_puskesmas ?? '-' }}</td>
         </tr>
         <tr>
             <td class="label">Alamat / Domisili</td>

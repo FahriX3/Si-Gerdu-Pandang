@@ -90,7 +90,7 @@
             <!-- Tab 2: Pemeriksaan Fisik & Klinis -->
             <div x-show="step === 2" style="display: none;" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" data-tab="2">
                 <div class="mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Pemeriksaan Fisik & Tanda Vital</h3>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Pemeriksaan Fisik</h3>
                     <p class="text-sm text-slate-500 mt-1">Sistem akan otomatis menghitung IMT dan kategori Tekanan Darah.</p>
                 </div>
                 
@@ -119,7 +119,7 @@
 
                     <!-- Tanda Vital -->
                     <div class="sm:col-span-3 border-t border-slate-100 dark:border-slate-700 pt-4 mt-2">
-                        <h4 class="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider mb-4">Tekanan Darah</h4>
+                        <h4 class="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider mb-4">Tanda Vital</h4>
                     </div>
 
                     <div>
@@ -186,7 +186,12 @@
                         <div class="space-y-3">
                             <template x-for="(obat, index) in obatList" :key="index">
                                 <div class="flex flex-col sm:flex-row gap-3 sm:items-center bg-slate-50 dark:bg-slate-900/50 p-3 sm:p-2 rounded-xl border border-slate-200 dark:border-slate-700" x-transition>
-                                    <input type="text" name="nama_obat[]" x-model="obat.nama" placeholder="Nama Obat" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full sm:flex-1 p-2.5 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" required>
+                                    <select name="nama_obat[]" x-model="obat.nama" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full sm:flex-1 p-2.5 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" required>
+                                        <option value="">-- Pilih Obat --</option>
+                                        @foreach($obats as $o)
+                                            <option value="{{ $o->nama_obat }}">{{ $o->nama_obat }}</option>
+                                        @endforeach
+                                    </select>
                                     <div class="flex gap-2 items-center w-full sm:w-auto">
                                         <input type="text" name="aturan_pakai[]" x-model="obat.aturan" placeholder="Aturan (ex: 3x1)" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full sm:w-32 p-2.5 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" required>
                                         <input type="number" name="jumlah_obat[]" x-model="obat.jumlah" placeholder="Jml" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-20 p-2.5 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" required>

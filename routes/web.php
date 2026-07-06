@@ -19,6 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:admin_dinkes')->group(function () {
         Route::resource('users', UserController::class);
         Route::resource('puskesmas', PuskesmasController::class);
+        Route::resource('master-obat', \App\Http\Controllers\MasterObatController::class)->except(['create', 'show', 'edit']);
     });
 
     Route::get('/pasien/{pasien}/print', [PasienController::class, 'printPdf'])->name('pasien.print');

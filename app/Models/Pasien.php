@@ -19,7 +19,7 @@ class Pasien extends Model
         'id_pasien', 'id_puskesmas', 'nama_lengkap', 'tanggal_lahir', 'jenis_kelamin',
         'nik', 'no_kk', 'no_rm', 'nama_kepala_keluarga', 'status_peserta',
         'tanggal_meninggal', 'kalurahan', 'dukuh', 'rt', 'rw', 'no_hp',
-        'no_jkn', 'tanggal_awal_terdaftar', 'jenis_prolanis',
+        'no_jkn', 'tanggal_awal_terdaftar', 'jenis_prolanis', 'status_peserta_prb',
         'riwayat_hipertensi_keluarga', 'jenis_pekerjaan', 'status_merokok'
     ];
 

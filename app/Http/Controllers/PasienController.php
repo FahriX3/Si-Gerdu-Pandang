@@ -56,9 +56,10 @@ class PasienController extends Controller
             'no_hp' => 'nullable|string|max:20',
             'no_jkn' => 'nullable|string|max:50',
             'tanggal_awal_terdaftar' => 'required|date',
-            'jenis_prolanis' => 'required|string|max:50',
+            'jenis_prolanis' => 'required|in:HT,DM',
+            'status_peserta_prb' => 'nullable|in:HT,DM,Penyakit Jantung,PPOK,Asma',
             'riwayat_hipertensi_keluarga' => 'required|in:Ya,Tidak,Tidak Tahu',
-            'jenis_pekerjaan' => 'required|string|max:255',
+            'jenis_pekerjaan' => 'required|in:PNS,TNI/Polri,Swasta,Wiraswasta,Petani/Nelayan,Tidak Kerja',
             'status_merokok' => 'required|in:Ya,Tidak',
         ];
 
@@ -113,9 +114,10 @@ class PasienController extends Controller
             'no_hp' => 'nullable|string|max:20',
             'no_jkn' => 'nullable|string|max:50',
             'tanggal_awal_terdaftar' => 'required|date',
-            'jenis_prolanis' => 'required|string|max:50',
+            'jenis_prolanis' => 'required|in:HT,DM',
+            'status_peserta_prb' => 'nullable|in:HT,DM,Penyakit Jantung,PPOK,Asma',
             'riwayat_hipertensi_keluarga' => 'required|in:Ya,Tidak,Tidak Tahu',
-            'jenis_pekerjaan' => 'required|string|max:255',
+            'jenis_pekerjaan' => 'required|in:PNS,TNI/Polri,Swasta,Wiraswasta,Petani/Nelayan,Tidak Kerja',
             'status_merokok' => 'required|in:Ya,Tidak',
         ];
 

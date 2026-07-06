@@ -42,7 +42,8 @@ class PemeriksaanController extends Controller
     {
         // For the autocomplete
         $pasiens = Pasien::select('id_pasien', 'nama_lengkap', 'nik')->get();
-        return view('pemeriksaan.create', compact('pasiens'));
+        $obats = \App\Models\MasterObat::orderBy('nama_obat')->get();
+        return view('pemeriksaan.create', compact('pasiens', 'obats'));
     }
 
     public function store(Request $request)

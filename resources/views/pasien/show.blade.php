@@ -107,8 +107,12 @@
                         <p class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ $pasien->status_merokok }}</p>
                     </div>
                     <div>
-                        <p class="text-xs text-slate-500 mb-1">Jenis Prolanis</p>
+                        <p class="text-xs text-slate-500 mb-1">Status Peserta Prolanis</p>
                         <p class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ $pasien->jenis_prolanis }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 mb-1">Status Peserta PRB</p>
+                        <p class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ $pasien->status_peserta_prb ?: '-' }}</p>
                     </div>
                     <div>
                         <p class="text-xs text-slate-500 mb-1">No JKN / BPJS</p>

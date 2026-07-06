@@ -145,16 +145,45 @@
 
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Jenis Pekerjaan <span class="text-rose-500">*</span></label>
-                        <input type="text" name="jenis_pekerjaan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required value="{{ old('jenis_pekerjaan', 'Tidak Bekerja') }}">
+                        <select name="jenis_pekerjaan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
+                            <option value="">-- Pilih Pekerjaan --</option>
+                            <option value="PNS" {{ old('jenis_pekerjaan') == 'PNS' ? 'selected' : '' }}>PNS</option>
+                            <option value="TNI/Polri" {{ old('jenis_pekerjaan') == 'TNI/Polri' ? 'selected' : '' }}>TNI/Polri</option>
+                            <option value="Swasta" {{ old('jenis_pekerjaan') == 'Swasta' ? 'selected' : '' }}>Swasta</option>
+                            <option value="Wiraswasta" {{ old('jenis_pekerjaan') == 'Wiraswasta' ? 'selected' : '' }}>Wiraswasta</option>
+                            <option value="Petani/Nelayan" {{ old('jenis_pekerjaan') == 'Petani/Nelayan' ? 'selected' : '' }}>Petani/Nelayan</option>
+                            <option value="Tidak Kerja" {{ old('jenis_pekerjaan') == 'Tidak Kerja' ? 'selected' : '' }}>Tidak Kerja</option>
+                        </select>
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Nomor JKN / BPJS</label>
                         <input type="text" name="no_jkn" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" value="{{ old('no_jkn') }}">
                     </div>
                     
-                    <div class="sm:col-span-2">
-                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Jenis Prolanis <span class="text-rose-500">*</span></label>
-                        <input type="text" name="jenis_prolanis" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full md:w-1/2 p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required value="{{ old('jenis_prolanis', 'Non-Prolanis') }}">
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Status Peserta Prolanis <span class="text-rose-500">*</span></label>
+                        <div class="flex gap-4 mt-3">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="jenis_prolanis" value="HT" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500" {{ old('jenis_prolanis') == 'HT' ? 'checked' : '' }} required>
+                                <span class="text-sm text-slate-700 dark:text-slate-300 font-medium">HT (Hipertensi)</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="jenis_prolanis" value="DM" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500" {{ old('jenis_prolanis') == 'DM' ? 'checked' : '' }} required>
+                                <span class="text-sm text-slate-700 dark:text-slate-300 font-medium">DM (Diabetes Melitus)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Status Peserta PRB</label>
+                        <select name="status_peserta_prb" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                            <option value="">-- Bukan Peserta PRB --</option>
+                            <option value="HT" {{ old('status_peserta_prb') == 'HT' ? 'selected' : '' }}>HT</option>
+                            <option value="DM" {{ old('status_peserta_prb') == 'DM' ? 'selected' : '' }}>DM</option>
+                            <option value="Penyakit Jantung" {{ old('status_peserta_prb') == 'Penyakit Jantung' ? 'selected' : '' }}>Penyakit Jantung</option>
+                            <option value="PPOK" {{ old('status_peserta_prb') == 'PPOK' ? 'selected' : '' }}>PPOK</option>
+                            <option value="Asma" {{ old('status_peserta_prb') == 'Asma' ? 'selected' : '' }}>Asma</option>
+                        </select>
                     </div>
                 </div>
             </div>
