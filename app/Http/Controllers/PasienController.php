@@ -12,10 +12,16 @@ class PasienController extends Controller
     {
         $query = Pasien::with('puskesmas');
         
+        $kelurahans = [];
         if (auth()->user()->role !== 'admin_dinkes') {
             $query->where('id_puskesmas', auth()->user()->id_puskesmas);
+            $kelurahans = \App\Models\MasterKelurahan::where('id_puskesmas', auth()->user()->id_puskesmas)->orderBy('nama_kelurahan')->get();
         } elseif ($request->filled('id_puskesmas')) {
             $query->where('id_puskesmas', $request->id_puskesmas);
+        }
+
+        if (auth()->user()->role === 'admin_dinkes') {
+            $kelurahans = \App\Models\MasterKelurahan::select('nama_kelurahan')->distinct()->orderBy('nama_kelurahan')->get();
         }
 
         if ($request->has('search') && $request->search != '') {
@@ -26,16 +32,19 @@ class PasienController extends Controller
         }
         $pasiens = $query->orderBy('created_at', 'desc')->paginate(10);
         $puskesmas = auth()->user()->role === 'admin_dinkes' ? MasterPuskesmas::all() : [];
-        return view('pasien.index', compact('pasiens', 'puskesmas'));
+        return view('pasien.index', compact('pasiens', 'puskesmas', 'kelurahans'));
     }
 
     public function create()
     {
         $puskesmas = [];
+        $kelurahans = [];
         if (auth()->user()->role === 'admin_dinkes') {
             $puskesmas = MasterPuskesmas::all();
+        } else {
+            $kelurahans = \App\Models\MasterKelurahan::where('id_puskesmas', auth()->user()->id_puskesmas)->get();
         }
-        return view('pasien.create', compact('puskesmas'));
+        return view('pasien.create', compact('puskesmas', 'kelurahans'));
     }
 
     public function store(Request $request)
@@ -146,5 +155,67 @@ class PasienController extends Controller
         
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pasien.pdf', compact('pasien'));
         return $pdf->download('Profil_Pasien_' . str_replace(' ', '_', $pasien->nama_lengkap) . '.pdf');
+    }
+
+    public function exportRegisterPdf(Request $request)
+    {
+        $query = Pasien::with('puskesmas');
+        
+        $filterTexts = [];
+        
+        // Cek apakah mode tanpa filter aktif
+        $noFilter = $request->has('semua_data') && $request->semua_data == '1';
+        
+        // Filter based on role
+        if (auth()->user()->role !== 'admin_dinkes') {
+            $query->where('id_puskesmas', auth()->user()->id_puskesmas);
+        } elseif (!$noFilter && $request->filled('id_puskesmas')) {
+            $query->where('id_puskesmas', $request->id_puskesmas);
+        }
+
+        if (!$noFilter) {
+            // Date Filter
+            if ($request->filled('tanggal_awal')) {
+                $query->whereDate('tanggal_awal_terdaftar', '>=', $request->tanggal_awal);
+            }
+            if ($request->filled('tanggal_akhir')) {
+                $query->whereDate('tanggal_awal_terdaftar', '<=', $request->tanggal_akhir);
+            }
+            if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+                $filterTexts[] = "Periode: " . $request->tanggal_awal . " s/d " . $request->tanggal_akhir;
+            }
+    
+            // Kalurahan Filter
+            if ($request->filled('kalurahan')) {
+                $query->where('kalurahan', 'like', '%' . $request->kalurahan . '%');
+                $filterTexts[] = "Kalurahan: " . strtoupper($request->kalurahan);
+            }
+        }
+
+        $pasiens = $query->orderBy('tanggal_awal_terdaftar', 'asc')->get();
+
+        $puskesmasName = "SEMUA PUSKESMAS";
+        if (auth()->user()->role !== 'admin_dinkes') {
+            $puskesmasName = auth()->user()->puskesmas->nama_puskesmas ?? "SEMUA PUSKESMAS";
+        } elseif (!$noFilter && $request->filled('id_puskesmas')) {
+            $pusk = MasterPuskesmas::find($request->id_puskesmas);
+            if ($pusk) {
+                $puskesmasName = $pusk->nama_puskesmas;
+                $filterTexts[] = "Puskesmas: " . $pusk->nama_puskesmas;
+            }
+        }
+
+        $kalurahanName = (!$noFilter && $request->filled('kalurahan')) ? strtoupper($request->kalurahan) : 'SEMUA KALURAHAN';
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pasien.pdf_register', [
+            'pasiens' => $pasiens,
+            'puskesmasName' => strtoupper($puskesmasName),
+            'kalurahanName' => $kalurahanName,
+            'filters' => $filterTexts,
+            'user' => auth()->user()
+        ]);
+        
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->download("register_peserta_" . date('Ymd_His') . ".pdf");
     }
 }

@@ -35,4 +35,31 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('totalPasien', 'totalPemeriksaan', 'pasienHipertensiTidakTerkontrol', 'grafikData'));
     }
+
+    public function exportPdf()
+    {
+        $user = auth()->user();
+        
+        $totalPasien = Pasien::count();
+        $totalPemeriksaan = Pemeriksaan::count();
+        $pasienHipertensiTidakTerkontrol = Pemeriksaan::where('diagnosis', 'HT tidak terkontrol')
+            ->whereDate('tanggal_pemeriksaan', '>=', now()->subDays(30))
+            ->count();
+            
+        if ($user->role === 'admin_dinkes') {
+            $grafikData = Pasien::select('master_puskesmas.nama_puskesmas as label', DB::raw('count(pasiens.id_pasien) as total'))
+                ->join('master_puskesmas', 'pasiens.id_puskesmas', '=', 'master_puskesmas.id_puskesmas')
+                ->groupBy('master_puskesmas.nama_puskesmas')
+                ->get();
+            $title = 'Distribusi Pasien Per Puskesmas';
+        } else {
+            $grafikData = Pasien::select('kalurahan as label', DB::raw('count(id_pasien) as total'))
+                ->groupBy('kalurahan')
+                ->get();
+            $title = 'Distribusi Pasien Per Kalurahan';
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('dashboard.pdf', compact('totalPasien', 'totalPemeriksaan', 'pasienHipertensiTidakTerkontrol', 'grafikData', 'title'));
+        return $pdf->download('Statistik_Ringkasan_Eksekutif_' . date('Ymd') . '.pdf');
+    }
 }

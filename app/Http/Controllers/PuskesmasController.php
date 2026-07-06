@@ -8,16 +8,24 @@ use Illuminate\Http\Request;
 
 class PuskesmasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $puskesmas = MasterPuskesmas::with('kecamatan.kabupaten.provinsi')->paginate(10);
+        $query = MasterPuskesmas::with('kecamatan.kabupaten.provinsi');
+        
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nama_puskesmas', 'like', '%' . $request->search . '%')
+                  ->orWhere('kode_puskesmas', 'like', '%' . $request->search . '%');
+        }
+        
+        $puskesmas = $query->paginate(10)->withQueryString();
         return view('puskesmas.index', compact('puskesmas'));
     }
 
     public function create()
     {
         $kecamatans = MasterKecamatan::all();
-        return view('puskesmas.create', compact('kecamatans'));
+        $semuaKelurahans = \App\Models\MasterKelurahan::select('nama_kelurahan')->distinct()->orderBy('nama_kelurahan')->get();
+        return view('puskesmas.create', compact('kecamatans', 'semuaKelurahans'));
     }
 
     public function store(Request $request)
@@ -28,9 +36,20 @@ class PuskesmasController extends Controller
             'id_kecamatan' => 'required|exists:master_kecamatans,id_kecamatan',
             'alamat' => 'required|string',
             'no_telp' => 'nullable|string|max:20',
+            'kelurahans' => 'nullable|array',
+            'kelurahans.*' => 'required|string|max:255',
         ]);
 
-        MasterPuskesmas::create($validated);
+        $puskesmas = MasterPuskesmas::create($validated);
+        
+        if ($request->has('kelurahans')) {
+            foreach ($request->kelurahans as $kel) {
+                if (trim($kel) !== '') {
+                    $puskesmas->kelurahans()->create(['nama_kelurahan' => trim($kel)]);
+                }
+            }
+        }
+
         return redirect()->route('puskesmas.index')->with('success', 'Puskesmas berhasil ditambahkan.');
     }
     
@@ -43,7 +62,9 @@ class PuskesmasController extends Controller
     public function edit(MasterPuskesmas $puskesma)
     {
         $kecamatans = MasterKecamatan::all();
-        return view('puskesmas.edit', compact('puskesma', 'kecamatans'));
+        $puskesma->load('kelurahans');
+        $semuaKelurahans = \App\Models\MasterKelurahan::select('nama_kelurahan')->distinct()->orderBy('nama_kelurahan')->get();
+        return view('puskesmas.edit', compact('puskesma', 'kecamatans', 'semuaKelurahans'));
     }
 
     public function update(Request $request, MasterPuskesmas $puskesma)
@@ -54,9 +75,31 @@ class PuskesmasController extends Controller
             'id_kecamatan' => 'required|exists:master_kecamatans,id_kecamatan',
             'alamat' => 'required|string',
             'no_telp' => 'nullable|string|max:20',
+            'kelurahans' => 'nullable|array',
+            'kelurahans.*' => 'required|string|max:255',
         ]);
 
         $puskesma->update($validated);
+
+        $puskesma->kelurahans()->delete();
+        if ($request->has('kelurahans')) {
+            foreach ($request->kelurahans as $kel) {
+                if (trim($kel) !== '') {
+                    $puskesma->kelurahans()->create(['nama_kelurahan' => trim($kel)]);
+                }
+            }
+        }
+
         return redirect()->route('puskesmas.index')->with('success', 'Puskesmas berhasil diperbarui.');
+    }
+
+    public function getKelurahans(MasterPuskesmas $puskesma)
+    {
+        return response()->json($puskesma->kelurahans);
+    }
+
+    public function getAllKelurahans()
+    {
+        return response()->json(\App\Models\MasterKelurahan::select('nama_kelurahan')->distinct()->orderBy('nama_kelurahan')->get());
     }
 }

@@ -67,13 +67,7 @@
                         <label for="tanggal_pemeriksaan" class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Tanggal Pemeriksaan <span class="text-rose-500">*</span></label>
                         <input type="date" name="tanggal_pemeriksaan" id="tanggal_pemeriksaan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" value="{{ date('Y-m-d') }}" required>
                     </div>
-                    <div>
-                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Tempat Pemeriksaan</label>
-                        <div class="bg-slate-100 border border-slate-200 text-slate-600 text-sm rounded-xl block w-full p-3 shadow-sm font-medium dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 select-none cursor-not-allowed">
-                            {{ auth()->user()->puskesmas->nama_puskesmas ?? 'Puskesmas' }}
-                        </div>
-                        <input type="hidden" name="tempat_pemeriksaan" value="Puskesmas">
-                    </div>
+
                     <div class="sm:col-span-2">
                         <label for="keluhan" class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Keluhan Utama <span class="text-rose-500">*</span></label>
                         <textarea name="keluhan" id="keluhan" rows="3" class="block p-3 w-full text-sm text-slate-900 bg-slate-50 rounded-xl border border-slate-300 focus:ring-primary-500 focus:border-primary-500 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" placeholder="Jelaskan keluhan utama pasien..." required></textarea>
@@ -141,7 +135,7 @@
                          x-show="tensiStatus !== ''" x-transition>
                         <svg class="w-5 h-5 mr-3" :class="tensiStatus === 'Normal' ? 'text-emerald-500' : 'text-rose-500'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         <div>
-                            Kategori Tekanan Darah: <strong class="text-base uppercase tracking-wide" x-text="tensiStatus"></strong>
+                            Kategori Tanda Vital: <strong class="text-base uppercase tracking-wide" x-text="tensiStatus"></strong>
                         </div>
                     </div>
 
@@ -236,14 +230,27 @@
                 
                 <div class="grid gap-6 mb-6 sm:grid-cols-2 p-5 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700">
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Kolesterol Total (mg/dL)</label>
-                        <input type="number" name="kolesterol_total" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Gula Darah Puasa (GDP) (mg/dL)</label>
+                        <input type="number" step="0.01" name="gula_darah_puasa" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">GDS (mg/dL)</label>
-                        <input type="number" name="gula_darah_sewaktu" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Gula Darah Sewaktu (GDS) (mg/dL)</label>
+                        <input type="number" step="0.01" name="gula_darah_sewaktu" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
                     </div>
-                    <div class="sm:col-span-2 mt-2">
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Kolesterol Total (mg/dL)</label>
+                        <input type="number" step="0.01" name="kolesterol_total" x-model="kolesterol" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Kategori Kolesterol</label>
+                        <div class="bg-slate-100 border border-slate-200 text-slate-600 text-sm rounded-xl block w-full p-3 shadow-sm font-semibold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 select-none cursor-not-allowed" x-text="kolesterolStatus || '-- Auto Kalkulasi --'">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Asam Urat (mg/dL)</label>
+                        <input type="number" step="0.01" name="asam_urat" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                    </div>
+                    <div class="sm:col-span-2 mt-2 border-t border-slate-200 dark:border-slate-700 pt-4">
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Upload Dokumen Hasil Lab (PDF/JPG/PNG)</label>
                         <input type="file" name="dokumen_lab" accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 border border-slate-300 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-600 dark:file:bg-primary-900/30 dark:file:text-primary-400">
                     </div>
@@ -276,8 +283,17 @@
                 systole: '',
                 diastole: '',
                 tensiStatus: '',
-                obatList: [{nama: '', aturan: '', jumlah: ''}],
-                
+                kolesterol: '',
+                obatList: [
+                    {nama: '', aturan: '', jumlah: ''}
+                ],
+                get kolesterolStatus() {
+                    if (!this.kolesterol) return '';
+                    const val = parseFloat(this.kolesterol);
+                    if (val < 200) return 'Normal';
+                    if (val <= 239) return 'Batas Tinggi (Borderline)';
+                    return 'Tinggi';
+                },
                 validateAndSubmit(e) {
                     let form = document.getElementById('pemeriksaanForm');
                     

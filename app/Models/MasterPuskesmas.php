@@ -20,6 +20,16 @@ class MasterPuskesmas extends Model
         return $this->belongsTo(MasterKecamatan::class, 'id_kecamatan', 'id_kecamatan');
     }
 
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'id', 'id');
+    }
+
+    public function kelurahans()
+    {
+        return $this->hasMany(MasterKelurahan::class, 'id_puskesmas', 'id_puskesmas');
+    }
+
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'id_puskesmas', 'id_puskesmas');

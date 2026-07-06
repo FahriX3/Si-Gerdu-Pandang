@@ -36,7 +36,7 @@
                     @if(auth()->user()->role === 'admin_dinkes')
                     <div class="sm:col-span-2">
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Puskesmas Naungan Pasien <span class="text-rose-500">*</span></label>
-                        <select name="id_puskesmas" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
+                        <select name="id_puskesmas" id="id_puskesmas" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
                             <option value="">-- Pilih Puskesmas --</option>
                             @foreach($puskesmas as $p)
                                 <option value="{{ $p->id_puskesmas }}" {{ old('id_puskesmas') == $p->id_puskesmas ? 'selected' : '' }}>{{ $p->nama_puskesmas }}</option>
@@ -86,7 +86,14 @@
                 <div class="grid gap-6 sm:grid-cols-3">
                     <div class="sm:col-span-3">
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Kalurahan / Desa <span class="text-rose-500">*</span></label>
-                        <input type="text" name="kalurahan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required value="{{ old('kalurahan') }}">
+                        <select name="kalurahan" id="kalurahan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
+                            <option value="">-- Pilih Kalurahan --</option>
+                            @if(auth()->user()->role !== 'admin_dinkes' && isset($kelurahans))
+                                @foreach($kelurahans as $kel)
+                                    <option value="{{ $kel->nama_kelurahan }}" {{ old('kalurahan') == $kel->nama_kelurahan ? 'selected' : '' }}>{{ $kel->nama_kelurahan }}</option>
+                                @endforeach
+                            @endif
+                        </select>
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Dusun / Dukuh</label>
@@ -199,4 +206,41 @@
             </div>
         </form>
     </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const puskesmasSelect = document.getElementById('id_puskesmas');
+            const kelurahanSelect = document.getElementById('kalurahan');
+            const oldKalurahan = '{{ old("kalurahan") }}';
+
+            if (puskesmasSelect) {
+                puskesmasSelect.addEventListener('change', function() {
+                    const id = this.value;
+                    kelurahanSelect.innerHTML = '<option value="">-- Memuat --</option>';
+                    
+                    if (id) {
+                        fetch(`/puskesmas/${id}/kelurahans`)
+                            .then(res => res.json())
+                            .then(data => {
+                                kelurahanSelect.innerHTML = '<option value="">-- Pilih Kalurahan --</option>';
+                                data.forEach(kel => {
+                                    const option = document.createElement('option');
+                                    option.value = kel.nama_kelurahan;
+                                    option.textContent = kel.nama_kelurahan;
+                                    if (oldKalurahan === kel.nama_kelurahan) option.selected = true;
+                                    kelurahanSelect.appendChild(option);
+                                });
+                            });
+                    } else {
+                        kelurahanSelect.innerHTML = '<option value="">-- Pilih Puskesmas Terlebih Dahulu --</option>';
+                    }
+                });
+
+                // Trigger change on load if already selected
+                if (puskesmasSelect.value) {
+                    puskesmasSelect.dispatchEvent(new Event('change'));
+                }
+            }
+        });
+    </script>
 </x-app-layout>

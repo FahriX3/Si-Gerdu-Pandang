@@ -99,10 +99,10 @@
                 <td>{{ $p->status_imt }}</td>
                 <td>{{ $p->diagnosis }}</td>
                 <td>
-                    @if($p->obat && count($p->obat) > 0)
+                    @if($p->terapiObats && count($p->terapiObats) > 0)
                         <ul style="margin: 0; padding-left: 12px; font-size: 9px;">
-                        @foreach($p->obat as $ob)
-                            <li>{{ $ob['nama'] }} ({{ $ob['aturan'] }})</li>
+                        @foreach($p->terapiObats as $ob)
+                            <li>{{ $ob->nama_obat }} ({{ $ob->aturan_pakai }})</li>
                         @endforeach
                         </ul>
                     @else

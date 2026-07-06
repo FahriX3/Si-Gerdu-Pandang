@@ -27,6 +27,16 @@
             </div>
         @endif
 
+        <!-- Search Bar -->
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
+            <form method="GET" action="{{ route('master-obat.index') }}" class="relative max-w-md">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <input type="text" name="search" value="{{ request('search') }}" class="block w-full p-2.5 pl-10 text-sm text-slate-900 border border-slate-200 rounded-xl bg-white focus:ring-primary-500 focus:border-primary-500 dark:bg-slate-900 dark:border-slate-700 dark:placeholder-slate-400 dark:text-white" placeholder="Cari nama obat...">
+            </form>
+        </div>
+
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -78,7 +88,7 @@
     </div>
 
     <!-- Modal Tambah -->
-    <div id="addModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+    <div id="addModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 p-4 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all border border-slate-100 dark:border-slate-700">
             <div class="flex justify-between items-center p-5 border-b border-slate-100 dark:border-slate-700">
                 <h3 class="text-lg font-bold text-slate-900 dark:text-white">Tambah Obat Baru</h3>
@@ -90,7 +100,7 @@
                 @csrf
                 <div class="mb-4">
                     <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Obat</label>
-                    <input type="text" name="nama_obat" required class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                    <input type="text" name="nama_obat" placeholder="Contoh: Amoxicillin 500mg" required class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white">
                 </div>
                 <div class="flex justify-end gap-3 mt-6">
                     <button type="button" onclick="document.getElementById('addModal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50">Batal</button>
@@ -101,7 +111,7 @@
     </div>
 
     <!-- Modal Edit -->
-    <div id="editModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+    <div id="editModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 p-4 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all border border-slate-100 dark:border-slate-700">
             <div class="flex justify-between items-center p-5 border-b border-slate-100 dark:border-slate-700">
                 <h3 class="text-lg font-bold text-slate-900 dark:text-white">Edit Obat</h3>
@@ -114,7 +124,7 @@
                 @method('PUT')
                 <div class="mb-4">
                     <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Obat</label>
-                    <input type="text" name="nama_obat" id="edit_nama_obat" required class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                    <input type="text" name="nama_obat" id="edit_nama_obat" required class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white">
                 </div>
                 <div class="flex justify-end gap-3 mt-6">
                     <button type="button" onclick="document.getElementById('editModal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50">Batal</button>

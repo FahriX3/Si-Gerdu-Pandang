@@ -172,6 +172,11 @@
                             <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->imt }}</span>
                             <span class="block text-[11px] font-medium text-slate-500">{{ $pemeriksaan->status_imt }}</span>
                         </div>
+                        <div class="sm:col-span-4 mt-2 mb-2"><h4 class="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider">Hasil Laboratorium</h4></div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">GDP</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->gula_darah_puasa ?? '-' }}</span>
+                        </div>
                         <div>
                             <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">GDS</span>
                             <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->gula_darah_sewaktu ?? '-' }}</span>
@@ -179,8 +184,13 @@
                         <div>
                             <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Kolesterol</span>
                             <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->kolesterol_total ?? '-' }}</span>
+                            <span class="block text-[11px] font-medium text-slate-500">{{ $pemeriksaan->kategori_kolesterol }}</span>
                         </div>
                         <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Asam Urat</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->asam_urat ?? '-' }}</span>
+                        </div>
+                        <div class="sm:col-span-2">
                             <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Dokumen Lab</span>
                             @if($pemeriksaan->dokumen_lab)
                                 <a href="{{ asset('storage/' . $pemeriksaan->dokumen_lab) }}" target="_blank" class="inline-flex items-center text-sm font-bold text-primary-600 hover:text-primary-700">

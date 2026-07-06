@@ -18,7 +18,8 @@ class Pemeriksaan extends Model
         'tempat_pemeriksaan', 'keluhan', 'berat_badan', 'tinggi_badan',
         'lingkar_perut', 'systole', 'diastole', 'nadi', 'diagnosis', 'catatan',
         'tanggal_pemberian_obat', 'gula_darah_puasa', 'gula_darah_sewaktu',
-        'kolesterol_total', 'asam_urat', 'dokumen_lab', 'path_foto_lab'
+        'kolesterol_total', 'kategori_kolesterol', 'trigliserida', 'kategori_trigliserida', 
+        'asam_urat', 'kategori_asam_urat', 'hba1c', 'dokumen_lab', 'path_foto_lab'
     ];
 
     protected $casts = [
@@ -57,8 +58,8 @@ class Pemeriksaan extends Model
     public function getKategoriKolesterolAttribute(): string
     {
         if (!$this->kolesterol_total) return 'Tidak Diperiksa';
-        if ($this->kolesterol_total < 200) return 'Ideal';
-        if ($this->kolesterol_total <= 239) return 'Ambang Batas';
+        if ($this->kolesterol_total < 200) return 'Normal';
+        if ($this->kolesterol_total <= 239) return 'Batas Tinggi (Borderline)';
         return 'Tinggi';
     }
 

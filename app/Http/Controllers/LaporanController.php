@@ -12,16 +12,20 @@ class LaporanController extends Controller
     public function index()
     {
         $puskesmas = [];
+        $kelurahans = [];
         if (auth()->user()->role === 'admin_dinkes') {
             $puskesmas = MasterPuskesmas::all();
+            $kelurahans = \App\Models\MasterKelurahan::select('nama_kelurahan')->distinct()->orderBy('nama_kelurahan')->get();
+        } else {
+            $kelurahans = \App\Models\MasterKelurahan::where('id_puskesmas', auth()->user()->id_puskesmas)->orderBy('nama_kelurahan')->get();
         }
         
-        return view('laporan.index', compact('puskesmas'));
+        return view('laporan.index', compact('puskesmas', 'kelurahans'));
     }
 
     private function getFilteredData(Request $request)
     {
-        $query = Pemeriksaan::with(['pasien.puskesmas', 'pemeriksa']);
+        $query = Pemeriksaan::with(['pasien.puskesmas', 'pemeriksa', 'terapiObats']);
 
         // Filter based on role
         if (auth()->user()->role !== 'admin_dinkes') {
@@ -52,7 +56,53 @@ class LaporanController extends Controller
             $query->where('status_imt', $request->status_imt);
         }
 
-        return $query->orderBy('tanggal_pemeriksaan', 'desc')->get();
+        // Kalurahan Filter
+        if ($request->filled('kalurahan')) {
+            $query->whereHas('pasien', function ($q) use ($request) {
+                $q->where('kalurahan', 'like', '%' . $request->kalurahan . '%');
+            });
+        }
+
+        return $query->orderBy('tanggal_pemeriksaan', 'desc')->orderBy('created_at', 'desc')->get();
+    }
+
+    public function preview(Request $request)
+    {
+        $pemeriksaans = $this->getFilteredData($request);
+        
+        $data = $pemeriksaans->map(function($p) {
+            $obatText = "";
+            if ($p->terapiObats && count($p->terapiObats) > 0) {
+                $obatList = [];
+                foreach ($p->terapiObats as $ob) {
+                    $obatList[] = $ob->nama_obat . " (" . $ob->aturan_pakai . ")";
+                }
+                $obatText = implode("; ", $obatList);
+            }
+
+            return [
+                'tanggal_pemeriksaan' => $p->tanggal_pemeriksaan->format('d/m/Y'),
+                'nik' => $p->pasien->nik ?? '-',
+                'nama_pasien' => $p->pasien->nama_lengkap ?? '-',
+                'jenis_kelamin' => $p->pasien->jenis_kelamin ?? '-',
+                'usia' => $p->pasien->umur ?? '-',
+                'alamat' => $p->pasien->alamat ?? '-',
+                'kalurahan' => $p->pasien->kalurahan ?? '-',
+                'puskesmas' => $p->pasien->puskesmas->nama_puskesmas ?? '-',
+                'tensi' => $p->systole . '/' . $p->diastole,
+                'kategori_tensi' => $p->kategori_tensi,
+                'tb' => $p->tinggi_badan,
+                'bb' => $p->berat_badan,
+                'lp' => $p->lingkar_perut,
+                'imt' => $p->imt,
+                'status_imt' => $p->status_imt,
+                'diagnosis' => $p->diagnosis,
+                'obat' => $obatText,
+                'petugas' => $p->pemeriksa->name ?? '-'
+            ];
+        });
+
+        return response()->json($data);
     }
 
     public function exportCsv(Request $request)
@@ -71,7 +121,7 @@ class LaporanController extends Controller
 
         $columns = [
             'Tanggal Pemeriksaan', 'No KTP/NIK', 'Nama Pasien', 'Jenis Kelamin', 'Usia', 
-            'Alamat', 'Puskesmas', 'Systole', 'Diastole', 'Kategori Tensi', 
+            'Alamat', 'Kalurahan', 'Puskesmas', 'Systole', 'Diastole', 'Kategori Tensi', 
             'Tinggi Badan (cm)', 'Berat Badan (kg)', 'Lingkar Perut (cm)', 
             'IMT', 'Status IMT', 'Diagnosis', 'Terapi/Obat', 'Petugas'
         ];
@@ -83,10 +133,10 @@ class LaporanController extends Controller
             foreach ($pemeriksaans as $p) {
                 // Parse obat
                 $obatText = "";
-                if ($p->obat && count($p->obat) > 0) {
+                if ($p->terapiObats && count($p->terapiObats) > 0) {
                     $obatList = [];
-                    foreach ($p->obat as $ob) {
-                        $obatList[] = $ob['nama'] . " (" . $ob['aturan'] . ")";
+                    foreach ($p->terapiObats as $ob) {
+                        $obatList[] = $ob->nama_obat . " (" . $ob->aturan_pakai . ")";
                     }
                     $obatText = implode("; ", $obatList);
                 }
@@ -98,6 +148,7 @@ class LaporanController extends Controller
                     $p->pasien->jenis_kelamin ?? '-',
                     $p->pasien->umur ?? '-',
                     $p->pasien->alamat ?? '-',
+                    $p->pasien->kalurahan ?? '-',
                     $p->pasien->puskesmas->nama_puskesmas ?? '-',
                     $p->systole,
                     $p->diastole,
@@ -132,6 +183,9 @@ class LaporanController extends Controller
         if ($request->filled('id_puskesmas')) {
             $pusk = MasterPuskesmas::find($request->id_puskesmas);
             if ($pusk) $filterTexts[] = "Puskesmas: " . $pusk->nama_puskesmas;
+        }
+        if ($request->filled('kalurahan')) {
+            $filterTexts[] = "Kalurahan: " . $request->kalurahan;
         }
 
         $pdf = Pdf::loadView('laporan.pdf', [

@@ -87,12 +87,12 @@
         </div>
         
         <style>
-            @keyframes fadeInUp {
-                from { opacity: 0; transform: translateY(10px); }
-                to { opacity: 1; transform: translateY(0); }
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
             }
             .animate-fade-in-up {
-                animation: fadeInUp 0.4s ease-out forwards;
+                animation: fadeIn 0.4s ease-out forwards;
             }
         </style>
     </body>

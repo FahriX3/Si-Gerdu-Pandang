@@ -41,9 +41,10 @@ class PemeriksaanController extends Controller
     public function create(Request $request)
     {
         // For the autocomplete
-        $pasiens = Pasien::select('id_pasien', 'nama_lengkap', 'nik')->get();
+        $pasiens = Pasien::with('puskesmas')->select('id_pasien', 'nama_lengkap', 'nik', 'id_puskesmas')->get();
         $obats = \App\Models\MasterObat::orderBy('nama_obat')->get();
-        return view('pemeriksaan.create', compact('pasiens', 'obats'));
+        $puskesmas = auth()->user()->role === 'admin_dinkes' ? \App\Models\MasterPuskesmas::orderBy('nama_puskesmas')->get() : collect();
+        return view('pemeriksaan.create', compact('pasiens', 'obats', 'puskesmas'));
     }
 
     public function store(Request $request)
@@ -51,7 +52,7 @@ class PemeriksaanController extends Controller
         $validated = $request->validate([
             'id_pasien' => 'required|exists:pasiens,id_pasien',
             'tanggal_pemeriksaan' => 'required|date',
-            'tempat_pemeriksaan' => 'required|in:Puskesmas,Pustu,Posyandu Lansia,Lainnya',
+            'tempat_pemeriksaan' => 'nullable|string',
             'keluhan' => 'required|string',
             'berat_badan' => 'required|numeric',
             'tinggi_badan' => 'required|numeric',
@@ -62,9 +63,9 @@ class PemeriksaanController extends Controller
             'diagnosis' => 'required|in:HT terkontrol,HT tidak terkontrol',
             'catatan' => 'nullable|string',
             'tanggal_pemberian_obat' => 'nullable|date',
-            'gula_darah_puasa' => 'nullable|integer',
-            'gula_darah_sewaktu' => 'nullable|integer',
-            'kolesterol_total' => 'nullable|integer',
+            'gula_darah_puasa' => 'nullable|numeric',
+            'gula_darah_sewaktu' => 'nullable|numeric',
+            'kolesterol_total' => 'nullable|numeric',
             'asam_urat' => 'nullable|numeric',
             
             // File Upload Logic
@@ -85,6 +86,10 @@ class PemeriksaanController extends Controller
             $path = $request->file('dokumen_lab')->store('lab_documents', 'public');
             $validated['dokumen_lab'] = $path;
         }
+
+        // Auto-assign tempat pemeriksaan based on patient's puskesmas
+        $pasien = Pasien::with('puskesmas')->find($validated['id_pasien']);
+        $validated['tempat_pemeriksaan'] = $pasien->puskesmas->nama_puskesmas ?? 'Puskesmas';
 
         DB::beginTransaction();
         try {

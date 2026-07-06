@@ -7,14 +7,19 @@ use Illuminate\Http\Request;
 
 class MasterObatController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // Only allow admin_dinkes
         if (auth()->user()->role !== 'admin_dinkes') {
             abort(403);
         }
 
-        $obats = MasterObat::orderBy('nama_obat')->get();
+        $query = MasterObat::query();
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nama_obat', 'like', '%' . $request->search . '%');
+        }
+
+        $obats = $query->orderBy('nama_obat')->get();
         return view('master-obat.index', compact('obats'));
     }
 
