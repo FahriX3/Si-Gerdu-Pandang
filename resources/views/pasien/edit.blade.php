@@ -128,10 +128,10 @@
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Status Peserta <span class="text-rose-500">*</span></label>
                         <select name="status_peserta" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
-                            <option value="Aktif">Aktif</option>
-                            <option value="Meninggal">Meninggal</option>
-                            <option value="Pindah Domisili">Pindah Domisili</option>
-                            <option value="Non-Aktif">Non-Aktif</option>
+                            <option value="Aktif" {{ old('status_peserta', $pasien->status_peserta) == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="Meninggal" {{ old('status_peserta', $pasien->status_peserta) == 'Meninggal' ? 'selected' : '' }}>Meninggal</option>
+                            <option value="Pindah Domisili" {{ old('status_peserta', $pasien->status_peserta) == 'Pindah Domisili' ? 'selected' : '' }}>Pindah Domisili</option>
+                            <option value="Non-Aktif" {{ old('status_peserta', $pasien->status_peserta) == 'Non-Aktif' ? 'selected' : '' }}>Non-Aktif</option>
                         </select>
                     </div>
                     <div>
@@ -143,16 +143,16 @@
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Riwayat Hipertensi Keluarga <span class="text-rose-500">*</span></label>
                         <select name="riwayat_hipertensi_keluarga" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
                             <option value="">-- Pilih --</option>
-                            <option value="Ya">Ya</option>
-                            <option value="Tidak">Tidak</option>
-                            <option value="Tidak Tahu">Tidak Tahu</option>
+                            <option value="Ya" {{ old('riwayat_hipertensi_keluarga', $pasien->riwayat_hipertensi_keluarga) == 'Ya' ? 'selected' : '' }}>Ya</option>
+                            <option value="Tidak" {{ old('riwayat_hipertensi_keluarga', $pasien->riwayat_hipertensi_keluarga) == 'Tidak' ? 'selected' : '' }}>Tidak</option>
+                            <option value="Tidak Tahu" {{ old('riwayat_hipertensi_keluarga', $pasien->riwayat_hipertensi_keluarga) == 'Tidak Tahu' ? 'selected' : '' }}>Tidak Tahu</option>
                         </select>
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Status Merokok <span class="text-rose-500">*</span></label>
                         <select name="status_merokok" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
-                            <option value="Tidak">Tidak</option>
-                            <option value="Ya">Ya</option>
+                            <option value="Tidak" {{ old('status_merokok', $pasien->status_merokok) == 'Tidak' ? 'selected' : '' }}>Tidak</option>
+                            <option value="Ya" {{ old('status_merokok', $pasien->status_merokok) == 'Ya' ? 'selected' : '' }}>Ya</option>
                         </select>
                     </div>
 
@@ -217,7 +217,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const puskesmasSelect = document.getElementById('id_puskesmas');
             const kelurahanSelect = document.getElementById('kalurahan');
-            const oldKalurahan = '{{ old("kalurahan") }}';
+            const oldKalurahan = '{{ old("kalurahan", $pasien->kalurahan) }}';
 
             if (puskesmasSelect) {
                 puskesmasSelect.addEventListener('change', function() {
