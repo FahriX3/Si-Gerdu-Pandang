@@ -45,6 +45,16 @@
             <td>: {{ $pasien->no_jkn ?? '-' }}</td>
         </tr>
         <tr>
+            <td class="label">No. Rekam Medis (RM)</td>
+            <td colspan="3">: {{ $pasien->no_rm ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="label">Jenis Pekerjaan</td>
+            <td>: {{ $pasien->jenis_pekerjaan ?: '-' }}</td>
+            <td class="label">Status Merokok</td>
+            <td>: {{ $pasien->status_merokok ?: '-' }}</td>
+        </tr>
+        <tr>
             <td class="label">Status Prolanis</td>
             <td>: {{ $pasien->jenis_prolanis ?? '-' }}</td>
             <td class="label">Status PRB</td>

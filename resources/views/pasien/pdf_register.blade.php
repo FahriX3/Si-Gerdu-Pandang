@@ -59,7 +59,7 @@
             <tr>
                 <td class="text-center">{{ $index + 1 }}</td>
                 <td class="text-center">{{ $p->tanggal_awal_terdaftar ? $p->tanggal_awal_terdaftar->format('d/m/Y') : '-' }}</td>
-                <td class="text-center"></td>
+                <td class="text-center">{{ $p->no_rm ?: '-' }}</td>
                 <td>{{ $p->nama_lengkap }}</td>
                 <td class="text-center">{{ $p->nik }}</td>
                 <td class="text-center">{{ $p->tanggal_lahir ? $p->tanggal_lahir->format('d/m/Y') : '-' }}</td>

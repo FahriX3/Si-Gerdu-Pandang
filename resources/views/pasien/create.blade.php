@@ -54,6 +54,11 @@
                         <input type="text" name="no_kk" maxlength="16" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required value="{{ old('no_kk') }}">
                         @error('no_kk') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">No. Rekam Medis (RM) <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                        <input type="text" name="no_rm" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" value="{{ old('no_rm') }}">
+                        @error('no_rm') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
                     
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Lengkap Pasien <span class="text-rose-500">*</span></label>
