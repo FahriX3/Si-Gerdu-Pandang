@@ -102,8 +102,16 @@ class DashboardController extends Controller
 
         // Required data for filters
         $puskesmas = MasterPuskesmas::all();
-        // To get kalurahans for filter, we get unique kalurahans from Pasien
-        $kalurahans = Pasien::select('kalurahan')->distinct()->orderBy('kalurahan')->pluck('kalurahan');
+        
+        if ($user->role === 'admin_dinkes') {
+            if ($request->filled('id_puskesmas')) {
+                $kalurahans = \App\Models\MasterKelurahan::where('id_puskesmas', $request->id_puskesmas)->orderBy('nama_kelurahan')->pluck('nama_kelurahan');
+            } else {
+                $kalurahans = \App\Models\MasterKelurahan::select('nama_kelurahan')->distinct()->orderBy('nama_kelurahan')->pluck('nama_kelurahan');
+            }
+        } else {
+            $kalurahans = \App\Models\MasterKelurahan::where('id_puskesmas', $user->id_puskesmas)->orderBy('nama_kelurahan')->pluck('nama_kelurahan');
+        }
         
         $filters = [
             'id_puskesmas' => $request->id_puskesmas,
