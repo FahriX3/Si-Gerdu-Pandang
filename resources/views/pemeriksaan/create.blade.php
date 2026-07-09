@@ -92,15 +92,15 @@
                     <!-- Fisik -->
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Berat Badan (kg) <span class="text-rose-500">*</span></label>
-                        <input type="number" step="0.1" name="berat_badan" x-model="bb" @input="if($el.value.length > 3) $el.value = $el.value.slice(0,3); calculateIMT()" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
+                        <input type="number" step="0.1" name="berat_badan" x-model="bb" @input="if($el.value.length > 3) { $el.value = $el.value.slice(0,3); bb = $el.value; } calculateIMT()" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Tinggi Badan (cm) <span class="text-rose-500">*</span></label>
-                        <input type="number" step="0.1" name="tinggi_badan" x-model="tb" @input="if($el.value.length > 3) $el.value = $el.value.slice(0,3); calculateIMT()" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
+                        <input type="number" step="0.1" name="tinggi_badan" x-model="tb" @input="if($el.value.length > 3) { $el.value = $el.value.slice(0,3); tb = $el.value; } calculateIMT()" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Lingkar Perut (cm) <span class="text-rose-500">*</span></label>
-                        <input type="number" step="0.1" name="lingkar_perut" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required @input="if($el.value.length > 3) $el.value = $el.value.slice(0,3);">
+                        <input type="number" step="0.1" name="lingkar_perut" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required @input="if($el.value.length > 3) { $el.value = $el.value.slice(0,3); kolesterol = $el.value; }">
                     </div>
                     
                     <!-- IMT Alert -->
@@ -118,15 +118,15 @@
 
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Systole (mmHg) <span class="text-rose-500">*</span></label>
-                        <input type="number" name="systole" x-model="systole" @input="if($el.value.length > 3) $el.value = $el.value.slice(0,3); checkTensi()" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
+                        <input type="number" name="systole" x-model="systole" @input="if($el.value.length > 3) { $el.value = $el.value.slice(0,3); systole = $el.value; } checkTensi()" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Diastole (mmHg) <span class="text-rose-500">*</span></label>
-                        <input type="number" name="diastole" x-model="diastole" @input="if($el.value.length > 3) $el.value = $el.value.slice(0,3); checkTensi()" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
+                        <input type="number" name="diastole" x-model="diastole" @input="if($el.value.length > 3) { $el.value = $el.value.slice(0,3); diastole = $el.value; } checkTensi()" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Nadi (x/mnt) <span class="text-rose-500">*</span></label>
-                        <input type="number" name="nadi" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required @input="if($el.value.length > 3) $el.value = $el.value.slice(0,3);">
+                        <input type="number" name="nadi" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required @input="if($el.value.length > 3) { $el.value = $el.value.slice(0,3); kolesterol = $el.value; }">
                     </div>
 
                     <!-- Tensi Alert -->
@@ -231,15 +231,15 @@
                 <div class="grid gap-6 mb-6 sm:grid-cols-2 p-5 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700">
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Gula Darah Puasa (GDP) (mg/dL)</label>
-                        <input type="number" step="0.01" name="gula_darah_puasa" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" @input="if($el.value.length > 3) $el.value = $el.value.slice(0,3);">
+                        <input type="number" step="0.01" name="gula_darah_puasa" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" @input="if($el.value.length > 3) { $el.value = $el.value.slice(0,3); kolesterol = $el.value; }">
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Gula Darah Sewaktu (GDS) (mg/dL)</label>
-                        <input type="number" step="0.01" name="gula_darah_sewaktu" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" @input="if($el.value.length > 3) $el.value = $el.value.slice(0,3);">
+                        <input type="number" step="0.01" name="gula_darah_sewaktu" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" @input="if($el.value.length > 3) { $el.value = $el.value.slice(0,3); kolesterol = $el.value; }">
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Kolesterol Total (mg/dL)</label>
-                        <input type="number" step="0.01" name="kolesterol_total" x-model="kolesterol" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" @input="if($el.value.length > 3) $el.value = $el.value.slice(0,3);">
+                        <input type="number" step="0.01" name="kolesterol_total" x-model="kolesterol" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" @input="if($el.value.length > 3) { $el.value = $el.value.slice(0,3); kolesterol = $el.value; }">
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Kategori Kolesterol</label>
@@ -248,7 +248,7 @@
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Asam Urat (mg/dL)</label>
-                        <input type="number" step="0.01" name="asam_urat" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" @input="if($el.value.length > 3) $el.value = $el.value.slice(0,3);">
+                        <input type="number" step="0.01" name="asam_urat" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" @input="if($el.value.length > 3) { $el.value = $el.value.slice(0,3); kolesterol = $el.value; }">
                     </div>
                     <div class="sm:col-span-2 mt-2 border-t border-slate-200 dark:border-slate-700 pt-4">
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Upload Dokumen Hasil Lab (PDF/JPG/PNG)</label>
