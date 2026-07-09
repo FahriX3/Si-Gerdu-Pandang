@@ -160,15 +160,12 @@
 
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Jenis Pekerjaan <span class="text-rose-500">*</span></label>
-                        <select name="jenis_pekerjaan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
-                            <option value="">-- Pilih Pekerjaan --</option>
-                            <option value="PNS" {{ old('jenis_pekerjaan', $pasien->jenis_pekerjaan) == 'PNS' ? 'selected' : '' }}>PNS</option>
-                            <option value="TNI/Polri" {{ old('jenis_pekerjaan', $pasien->jenis_pekerjaan) == 'TNI/Polri' ? 'selected' : '' }}>TNI/Polri</option>
-                            <option value="Swasta" {{ old('jenis_pekerjaan', $pasien->jenis_pekerjaan) == 'Swasta' ? 'selected' : '' }}>Swasta</option>
-                            <option value="Wiraswasta" {{ old('jenis_pekerjaan', $pasien->jenis_pekerjaan) == 'Wiraswasta' ? 'selected' : '' }}>Wiraswasta</option>
-                            <option value="Petani/Nelayan" {{ old('jenis_pekerjaan', $pasien->jenis_pekerjaan) == 'Petani/Nelayan' ? 'selected' : '' }}>Petani/Nelayan</option>
-                            <option value="Tidak Kerja" {{ old('jenis_pekerjaan', $pasien->jenis_pekerjaan) == 'Tidak Kerja' ? 'selected' : '' }}>Tidak Kerja</option>
-                        </select>
+                        <select name="jenis_pekerjaan" id="pekerjaan-select" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
+                              <option value="">-- Pilih Pekerjaan --</option>
+                              @foreach($pekerjaans as $pkj)
+                                  <option value="{{ $pkj->nama_pekerjaan }}" {{ old('jenis_pekerjaan', $pasien->jenis_pekerjaan ?? '') == $pkj->nama_pekerjaan ? 'selected' : '' }}>{{ $pkj->nama_pekerjaan }}</option>
+                              @endforeach
+                          </select>
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Nomor JKN / BPJS</label>
@@ -251,4 +248,51 @@
             }
         });
     </script>
+
+    @push('styles')
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <style>
+        .ts-control {
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+        }
+        .dark .ts-control {
+            background-color: #0f172a;
+            border-color: #334155;
+            color: white;
+        }
+        .dark .ts-dropdown {
+            background-color: #1e293b;
+            color: white;
+            border-color: #334155;
+        }
+        .dark .ts-dropdown .option {
+            color: white;
+        }
+        .dark .ts-dropdown .option:hover, .dark .ts-dropdown .option.active {
+            background-color: #334155;
+        }
+        .dark .ts-control input {
+            color: white;
+        }
+    </style>
+    @endpush
+
+    @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new TomSelect('#pekerjaan-select',{
+                create: false,
+                sortField: {
+                    field: 'text',
+                    direction: 'asc'
+                }
+            });
+        });
+    </script>
+    @endpush
+
 </x-app-layout>

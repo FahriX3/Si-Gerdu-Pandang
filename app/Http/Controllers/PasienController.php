@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pasien;
+use App\Models\MasterPekerjaan;
 use App\Models\MasterPuskesmas;
 use Illuminate\Http\Request;
 
@@ -44,7 +45,8 @@ class PasienController extends Controller
         } else {
             $kelurahans = \App\Models\MasterKelurahan::where('id_puskesmas', auth()->user()->id_puskesmas)->get();
         }
-        return view('pasien.create', compact('puskesmas', 'kelurahans'));
+        $pekerjaans = MasterPekerjaan::orderBy('nama_pekerjaan')->get();
+        return view('pasien.create', compact('puskesmas', 'kelurahans', 'pekerjaans'));
     }
 
     public function store(Request $request)
@@ -70,7 +72,7 @@ class PasienController extends Controller
             'jenis_prolanis.*' => 'in:HT,DM',
             'status_peserta_prb' => 'nullable|in:HT,DM,Penyakit Jantung,PPOK,Asma',
             'riwayat_hipertensi_keluarga' => 'required|in:Ya,Tidak,Tidak Tahu',
-            'jenis_pekerjaan' => 'required|in:PNS,TNI/Polri,Swasta,Wiraswasta,Petani/Nelayan,Tidak Kerja',
+            'jenis_pekerjaan' => 'required|string|max:255',
             'status_merokok' => 'required|in:Merokok,Tidak Merokok,Sudah Berhenti Merokok',
         ];
 
@@ -104,7 +106,8 @@ class PasienController extends Controller
         if (auth()->user()->role === 'admin_dinkes') {
             $puskesmas = MasterPuskesmas::all();
         }
-        return view('pasien.edit', compact('pasien', 'puskesmas'));
+        $pekerjaans = MasterPekerjaan::orderBy('nama_pekerjaan')->get();
+        return view('pasien.edit', compact('pasien', 'puskesmas', 'pekerjaans'));
     }
 
     public function update(Request $request, Pasien $pasien)
@@ -130,7 +133,7 @@ class PasienController extends Controller
             'jenis_prolanis.*' => 'in:HT,DM',
             'status_peserta_prb' => 'nullable|in:HT,DM,Penyakit Jantung,PPOK,Asma',
             'riwayat_hipertensi_keluarga' => 'required|in:Ya,Tidak,Tidak Tahu',
-            'jenis_pekerjaan' => 'required|in:PNS,TNI/Polri,Swasta,Wiraswasta,Petani/Nelayan,Tidak Kerja',
+            'jenis_pekerjaan' => 'required|string|max:255',
             'status_merokok' => 'required|in:Merokok,Tidak Merokok,Sudah Berhenti Merokok',
         ];
 

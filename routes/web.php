@@ -23,6 +23,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kelurahans', [PuskesmasController::class, 'getAllKelurahans'])->name('kelurahans.all');
         Route::resource('puskesmas', PuskesmasController::class);
         Route::resource('master-obat', \App\Http\Controllers\MasterObatController::class)->except(['create', 'show', 'edit']);
+        Route::resource('master-pekerjaan', \App\Http\Controllers\MasterPekerjaanController::class)->except(['create', 'show', 'edit']);
     });
 
     Route::get('/pasien/{pasien}/print', [PasienController::class, 'printPdf'])->name('pasien.print');
