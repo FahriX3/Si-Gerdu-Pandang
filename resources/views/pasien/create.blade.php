@@ -150,8 +150,10 @@
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Status Merokok <span class="text-rose-500">*</span></label>
                         <select name="status_merokok" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
-                            <option value="Tidak">Tidak</option>
-                            <option value="Ya">Ya</option>
+                            <option value="">-- Pilih --</option>
+                            <option value="Merokok" {{ old('status_merokok', isset($pasien) ? $pasien->status_merokok : '') == 'Merokok' ? 'selected' : '' }}>Merokok</option>
+                            <option value="Tidak Merokok" {{ old('status_merokok', isset($pasien) ? $pasien->status_merokok : '') == 'Tidak Merokok' ? 'selected' : '' }}>Tidak Merokok</option>
+                            <option value="Sudah Berhenti Merokok" {{ old('status_merokok', isset($pasien) ? $pasien->status_merokok : '') == 'Sudah Berhenti Merokok' ? 'selected' : '' }}>Sudah Berhenti Merokok</option>
                         </select>
                     </div>
 

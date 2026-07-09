@@ -8,6 +8,48 @@
         </div>
     </x-slot>
 
+    <!-- Filters Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-8 dark:bg-slate-800 dark:border-slate-700/60">
+        <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            @if(Auth::user()->role === 'admin_dinkes')
+            <div>
+                <label class="block mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">Puskesmas</label>
+                <select name="id_puskesmas" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                    <option value="">Semua Puskesmas</option>
+                    @foreach($puskesmas as $p)
+                        <option value="{{ $p->id_puskesmas }}" {{ $filters['id_puskesmas'] == $p->id_puskesmas ? 'selected' : '' }}>{{ $p->nama_puskesmas }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @endif
+            <div>
+                <label class="block mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">Kalurahan</label>
+                <select name="kalurahan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                    <option value="">Semua Kalurahan</option>
+                    @foreach($kalurahans as $kel)
+                        <option value="{{ $kel }}" {{ $filters['kalurahan'] == $kel ? 'selected' : '' }}>{{ $kel }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">Tahun</label>
+                <select name="tahun" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                    @for($y = date('Y'); $y >= 2020; $y--)
+                        <option value="{{ $y }}" {{ $filters['tahun'] == $y ? 'selected' : '' }}>{{ $y }}</option>
+                    @endfor
+                </select>
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-medium py-2.5 px-4 rounded-xl transition-colors text-sm">
+                    Terapkan
+                </button>
+                <a href="{{ route('dashboard') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2.5 px-4 rounded-xl transition-colors text-sm text-center flex items-center justify-center">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
+
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         
@@ -82,12 +124,23 @@
                 <p class="text-sm text-slate-500 dark:text-slate-400">Peta sebaran data berdasarkan demografi wilayah.</p>
             </div>
             
-            <a href="{{ route('dashboard.exportPdf') }}" target="_blank" class="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1 bg-primary-50 dark:bg-primary-900/20 px-3 py-1.5 rounded-lg transition-colors">
+            <a href="{{ route('dashboard.exportPdf', request()->all()) }}" target="_blank" class="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1 bg-primary-50 dark:bg-primary-900/20 px-3 py-1.5 rounded-lg transition-colors">
                 Unduh PDF
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
             </a>
         </div>
         <div id="bar-chart" class="w-full"></div>
+    </div>
+
+    <!-- Trend Grafik Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mt-6 dark:bg-slate-800 dark:border-slate-700/60">
+        <div class="mb-6">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+                Tren Pemeriksaan Pasien
+            </h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Peta tren data pemeriksaan selama tahun berjalan.</p>
+        </div>
+        <div id="trend-chart" class="w-full"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -134,8 +187,10 @@
                 },
                 yaxis: {
                     labels: {
-                        style: { colors: '#64748b', fontSize: '12px', fontWeight: 500 }
-                    }
+                        style: { colors: '#64748b', fontSize: '12px', fontWeight: 500 },
+                        formatter: function(val) { return Math.round(val); }
+                    },
+                    tickAmount: Math.max(...series) > 0 && Math.max(...series) < 6 ? Math.max(...series) : undefined
                 },
                 grid: {
                     borderColor: '#f1f5f9',
@@ -164,6 +219,53 @@
 
             const chart = new ApexCharts(document.getElementById("bar-chart"), options);
             chart.render();
+
+            const trendSeries = @json($trendValues);
+            const trendOptions = {
+                series: [{
+                    name: 'Total Pemeriksaan',
+                    data: trendSeries
+                }],
+                chart: {
+                    type: 'area',
+                    height: '350px',
+                    fontFamily: "Inter, sans-serif",
+                    toolbar: { show: false },
+                    animations: { enabled: true }
+                },
+                dataLabels: { enabled: false },
+                stroke: { curve: 'smooth', width: 3 },
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'],
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
+                    labels: { style: { colors: '#64748b', fontSize: '12px', fontWeight: 500 } }
+                },
+                yaxis: {
+                    labels: {
+                        style: { colors: '#64748b', fontSize: '12px', fontWeight: 500 },
+                        formatter: function(val) { return Math.round(val); }
+                    },
+                    tickAmount: Math.max(...trendSeries) > 0 && Math.max(...trendSeries) < 6 ? Math.max(...trendSeries) : undefined
+                },
+                grid: {
+                    borderColor: '#f1f5f9',
+                    strokeDashArray: 4,
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.4,
+                        opacityTo: 0.05,
+                        stops: [0, 90, 100]
+                    }
+                },
+                colors: ["#10b981"]
+            };
+
+            const trendChart = new ApexCharts(document.getElementById("trend-chart"), trendOptions);
+            trendChart.render();
         });
     </script>
 </x-app-layout>

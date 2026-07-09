@@ -53,8 +53,8 @@ class PasienController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'nik' => 'required|string|size:16|unique:pasiens,nik',
-            'no_kk' => 'required|string|size:16',
+            'nik' => 'required|numeric|digits:16|unique:pasiens,nik',
+            'no_kk' => 'required|numeric|digits:16',
             'nama_kepala_keluarga' => 'required|string|max:255',
             'status_peserta' => 'required|in:Aktif,Meninggal,Pindah Domisili,Non-Aktif',
             'tanggal_meninggal' => 'nullable|date',
@@ -70,7 +70,7 @@ class PasienController extends Controller
             'status_peserta_prb' => 'nullable|in:HT,DM,Penyakit Jantung,PPOK,Asma',
             'riwayat_hipertensi_keluarga' => 'required|in:Ya,Tidak,Tidak Tahu',
             'jenis_pekerjaan' => 'required|in:PNS,TNI/Polri,Swasta,Wiraswasta,Petani/Nelayan,Tidak Kerja',
-            'status_merokok' => 'required|in:Ya,Tidak',
+            'status_merokok' => 'required|in:Merokok,Tidak Merokok,Sudah Berhenti Merokok',
         ];
 
         if (auth()->user()->role === 'admin_dinkes') {
@@ -112,8 +112,8 @@ class PasienController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'nik' => 'required|string|size:16|unique:pasiens,nik,'.$pasien->id_pasien.',id_pasien',
-            'no_kk' => 'required|string|size:16',
+            'nik' => 'required|numeric|digits:16|unique:pasiens,nik,'.$pasien->id_pasien.',id_pasien',
+            'no_kk' => 'required|numeric|digits:16',
             'nama_kepala_keluarga' => 'required|string|max:255',
             'status_peserta' => 'required|in:Aktif,Meninggal,Pindah Domisili,Non-Aktif',
             'tanggal_meninggal' => 'nullable|date',
@@ -129,7 +129,7 @@ class PasienController extends Controller
             'status_peserta_prb' => 'nullable|in:HT,DM,Penyakit Jantung,PPOK,Asma',
             'riwayat_hipertensi_keluarga' => 'required|in:Ya,Tidak,Tidak Tahu',
             'jenis_pekerjaan' => 'required|in:PNS,TNI/Polri,Swasta,Wiraswasta,Petani/Nelayan,Tidak Kerja',
-            'status_merokok' => 'required|in:Ya,Tidak',
+            'status_merokok' => 'required|in:Merokok,Tidak Merokok,Sudah Berhenti Merokok',
         ];
 
         if (auth()->user()->role === 'admin_dinkes') {
