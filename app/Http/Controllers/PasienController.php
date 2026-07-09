@@ -66,7 +66,8 @@ class PasienController extends Controller
             'no_jkn' => 'nullable|string|max:50',
             'no_rm' => 'nullable|string|max:50',
             'tanggal_awal_terdaftar' => 'required|date',
-            'jenis_prolanis' => 'required|in:HT,DM',
+            'jenis_prolanis' => 'required|array|min:1',
+            'jenis_prolanis.*' => 'in:HT,DM',
             'status_peserta_prb' => 'nullable|in:HT,DM,Penyakit Jantung,PPOK,Asma',
             'riwayat_hipertensi_keluarga' => 'required|in:Ya,Tidak,Tidak Tahu',
             'jenis_pekerjaan' => 'required|in:PNS,TNI/Polri,Swasta,Wiraswasta,Petani/Nelayan,Tidak Kerja',
@@ -125,7 +126,8 @@ class PasienController extends Controller
             'no_jkn' => 'nullable|string|max:50',
             'no_rm' => 'nullable|string|max:50',
             'tanggal_awal_terdaftar' => 'required|date',
-            'jenis_prolanis' => 'required|in:HT,DM',
+            'jenis_prolanis' => 'required|array|min:1',
+            'jenis_prolanis.*' => 'in:HT,DM',
             'status_peserta_prb' => 'nullable|in:HT,DM,Penyakit Jantung,PPOK,Asma',
             'riwayat_hipertensi_keluarga' => 'required|in:Ya,Tidak,Tidak Tahu',
             'jenis_pekerjaan' => 'required|in:PNS,TNI/Polri,Swasta,Wiraswasta,Petani/Nelayan,Tidak Kerja',
@@ -137,6 +139,8 @@ class PasienController extends Controller
         }
 
         $validated = $request->validate($rules);
+
+        $validated['jenis_prolanis'] = implode(', ', $request->jenis_prolanis);
 
         $pasien->update($validated);
 

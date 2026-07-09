@@ -179,11 +179,11 @@
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Status Peserta Prolanis <span class="text-rose-500">*</span></label>
                         <div class="flex gap-4 mt-3">
                             <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="radio" name="jenis_prolanis" value="HT" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500" {{ old('jenis_prolanis', $pasien->jenis_prolanis) == 'HT' ? 'checked' : '' }} required>
+                                <input type="checkbox" name="jenis_prolanis[]" value="HT" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 rounded" {{ in_array('HT', (array) old('jenis_prolanis', isset($pasien) && $pasien->jenis_prolanis ? explode(', ', $pasien->jenis_prolanis) : [])) ? 'checked' : '' }}>
                                 <span class="text-sm text-slate-700 dark:text-slate-300 font-medium">HT (Hipertensi)</span>
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="radio" name="jenis_prolanis" value="DM" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500" {{ old('jenis_prolanis', $pasien->jenis_prolanis) == 'DM' ? 'checked' : '' }} required>
+                                <input type="checkbox" name="jenis_prolanis[]" value="DM" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 rounded" {{ in_array('DM', (array) old('jenis_prolanis', isset($pasien) && $pasien->jenis_prolanis ? explode(', ', $pasien->jenis_prolanis) : [])) ? 'checked' : '' }}>
                                 <span class="text-sm text-slate-700 dark:text-slate-300 font-medium">DM (Diabetes Melitus)</span>
                             </label>
                         </div>
