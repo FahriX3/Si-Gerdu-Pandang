@@ -16,10 +16,12 @@ class Pemeriksaan extends Model
     protected $fillable = [
         'id_pemeriksaan', 'id_pasien', 'id_user', 'tanggal_pemeriksaan',
         'tempat_pemeriksaan', 'keluhan', 'berat_badan', 'tinggi_badan',
-        'lingkar_perut', 'systole', 'diastole', 'nadi', 'diagnosis', 'catatan',
+        'lingkar_perut', 'lila', 'systole', 'diastole', 'nadi', 'catatan',
         'tanggal_pemberian_obat', 'gula_darah_puasa', 'gula_darah_sewaktu',
         'kolesterol_total', 'kategori_kolesterol', 'trigliserida', 'kategori_trigliserida', 
-        'asam_urat', 'kategori_asam_urat', 'hba1c', 'dokumen_lab', 'path_foto_lab'
+        'asam_urat', 'kategori_asam_urat', 'hba1c', 'dokumen_lab', 'path_foto_lab',
+        'ureum', 'kreatinin', 'egfr', 'hdl', 'ldl', 'rasio_kolesterol_hdl', 'sgpt', 'mikroalbumin_kuantitatif',
+        'hasil_ekg', 'dokumen_ekg', 'prediksi_risiko_kardiovaskular'
     ];
 
     protected $casts = [
@@ -77,13 +79,18 @@ class Pemeriksaan extends Model
     {
         return $this->hasMany(TerapiObat::class, 'id_pemeriksaan', 'id_pemeriksaan');
     }
+
+    public function diagnoses()
+    {
+        return $this->belongsToMany(MasterDiagnosis::class, 'pemeriksaan_diagnosis', 'id_pemeriksaan', 'id_diagnosis');
+    }
     
     protected static function booted()
     {
         static::addGlobalScope('puskesmas', function (\Illuminate\Database\Eloquent\Builder $builder) {
             if (auth()->check() && auth()->user()->role !== 'admin_dinkes') {
                 $builder->whereHas('pasien', function ($q) {
-                    $q->where('id_puskesmas', auth()->user()->id_puskesmas);
+                    $q->where('pasiens.id_puskesmas', auth()->user()->id_puskesmas);
                 });
             }
         });

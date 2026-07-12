@@ -50,10 +50,10 @@
                     </div>
                 </div>
                 
-                <a :href="`/pasien/${selectedPasienId}`" target="_blank" class="shrink-0 inline-flex items-center px-4 py-2 text-sm font-medium text-emerald-700 bg-white border border-emerald-300 rounded-xl hover:bg-emerald-50 focus:ring-4 focus:outline-none focus:ring-emerald-100 shadow-sm transition-colors dark:bg-slate-800 dark:text-emerald-400 dark:border-emerald-700 dark:hover:bg-slate-700">
+                <button type="button" @click="window.open(`/pasien/${selectedPasienId}`, 'RiwayatPemeriksaan', 'width=1000,height=700,scrollbars=yes,resizable=yes')" class="shrink-0 inline-flex items-center px-4 py-2 text-sm font-medium text-emerald-700 bg-white border border-emerald-300 rounded-xl hover:bg-emerald-50 focus:ring-4 focus:outline-none focus:ring-emerald-100 shadow-sm transition-colors dark:bg-slate-800 dark:text-emerald-400 dark:border-emerald-700 dark:hover:bg-slate-700">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     Lihat Histori Pemeriksaan
-                </a>
+                </button>
             </div>
         </div>
 
@@ -74,6 +74,10 @@
             <button @click="step = 4" type="button" class="flex items-center px-4 py-2.5 text-sm font-semibold rounded-t-xl transition-all border-b-2 whitespace-nowrap" :class="step === 4 ? 'text-primary-600 border-primary-600 bg-primary-50 dark:bg-primary-900/30' : 'text-slate-500 border-transparent hover:text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'">
                 <span class="flex items-center justify-center w-6 h-6 mr-2 text-xs rounded-full" :class="step === 4 ? 'bg-primary-100 text-primary-700' : 'bg-slate-100 text-slate-500'">4</span>
                 Lab (Opsional)
+            </button>
+            <button @click="step = 5" type="button" class="flex items-center px-4 py-2.5 text-sm font-semibold rounded-t-xl transition-all border-b-2 whitespace-nowrap" :class="step === 5 ? 'text-primary-600 border-primary-600 bg-primary-50 dark:bg-primary-900/30' : 'text-slate-500 border-transparent hover:text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'">
+                <span class="flex items-center justify-center w-6 h-6 mr-2 text-xs rounded-full" :class="step === 5 ? 'bg-primary-100 text-primary-700' : 'bg-slate-100 text-slate-500'">5</span>
+                EKG (Opsional)
             </button>
         </div>
 
@@ -136,6 +140,10 @@
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Lingkar Perut (cm) <span class="text-rose-500">*</span></label>
                         <input type="number" step="0.1" name="lingkar_perut" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required @input="if($el.value.length > 3) { $el.value = $el.value.slice(0,3); kolesterol = $el.value; }">
                     </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">LILA (cm) <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                        <input type="number" step="0.1" name="lila" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                    </div>
                     
                     <!-- IMT Alert -->
                     <div class="sm:col-span-3 flex items-center p-4 text-sm text-blue-800 rounded-xl bg-blue-50/50 border border-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/30 shadow-sm" x-show="imt > 0" x-transition>
@@ -175,10 +183,12 @@
 
                     <div class="sm:col-span-3">
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Diagnosis Kesimpulan <span class="text-rose-500">*</span></label>
-                        <select name="diagnosis" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full md:w-1/2 p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
-                            <option value="HT terkontrol">HT Terkontrol</option>
-                            <option value="HT tidak terkontrol">HT Tidak Terkontrol</option>
+                        <select name="diagnoses[]" id="diagnoses" multiple class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
+                            @foreach($diagnoses as $diagnosis)
+                                <option value="{{ $diagnosis->id_diagnosis }}">{{ $diagnosis->nama_diagnosis }}</option>
+                            @endforeach
                         </select>
+                        <p class="text-xs text-slate-500 mt-1">Anda dapat memilih lebih dari satu diagnosis.</p>
                     </div>
                 </div>
 
@@ -251,6 +261,8 @@
                             Lanjut ke Lab (Opsional)
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </button>
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -284,20 +296,107 @@
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Asam Urat (mg/dL)</label>
                         <input type="number" step="0.01" name="asam_urat" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" @input="if($el.value.length > 3) { $el.value = $el.value.slice(0,3); kolesterol = $el.value; }">
                     </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">HBA1C (%)</label>
+                        <input type="number" step="0.01" name="hba1c" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Ureum (mg/dL)</label>
+                        <input type="number" step="0.01" name="ureum" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Kreatinin (mg/dL)</label>
+                        <input type="number" step="0.01" name="kreatinin" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">eGFR (mL/min/1.73m²)</label>
+                        <input type="number" step="0.01" name="egfr" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">HDL (mg/dL)</label>
+                        <input type="number" step="0.01" name="hdl" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">LDL (mg/dL)</label>
+                        <input type="number" step="0.01" name="ldl" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Trigliserida (mg/dL)</label>
+                        <input type="number" step="0.01" name="trigliserida" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Rasio Kol/HDL</label>
+                        <input type="number" step="0.01" name="rasio_kolesterol_hdl" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">SGPT (U/L)</label>
+                        <input type="number" step="0.01" name="sgpt" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Mikroalbumin Kuantitatif (mg/L)</label>
+                        <input type="number" step="0.01" name="mikroalbumin_kuantitatif" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                    </div>
                     <div class="sm:col-span-2 mt-2 border-t border-slate-200 dark:border-slate-700 pt-4">
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Upload Dokumen Hasil Lab (PDF/JPG/PNG)</label>
                         <input type="file" name="dokumen_lab" accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 border border-slate-300 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-600 dark:file:bg-primary-900/30 dark:file:text-primary-400">
                     </div>
                 </div>
-
-                <div class="flex justify-between pt-4 border-t border-slate-100 dark:border-slate-700">
-                    <button type="button" @click="step = 3" class="inline-flex items-center px-6 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 focus:ring-4 focus:outline-none focus:ring-slate-100 shadow-sm transition-colors">
+                <div class="flex flex-col sm:flex-row justify-between pt-4 border-t border-slate-100 dark:border-slate-700 gap-3">
+                    <button type="button" @click="step = 3" class="inline-flex justify-center items-center px-6 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 focus:ring-4 focus:outline-none focus:ring-slate-100 shadow-sm transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                         Kembali
                     </button>
-                    <button type="submit" class="inline-flex items-center px-6 py-2.5 text-sm font-bold text-white bg-primary-600 rounded-xl hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 shadow-md shadow-primary-500/30 transition-all hover:scale-[1.02]">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        Simpan Rekam Medis
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button type="submit" class="inline-flex justify-center items-center px-6 py-2.5 text-sm font-bold text-slate-700 bg-slate-200 rounded-xl hover:bg-slate-300 focus:ring-4 focus:outline-none focus:ring-slate-300 shadow-sm transition-all hover:scale-[1.02]">
+                            Simpan (Lewati EKG)
+                        </button>
+                        <button type="button" @click="step = 5" class="inline-flex justify-center items-center px-6 py-2.5 text-sm font-medium text-white bg-primary-600 rounded-xl hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 shadow-sm transition-colors">
+                            Lanjut ke EKG (Opsional)
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: EKG -->
+            <div x-show="step === 5" style="display: none;" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" data-tab="5">
+                <div class="mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">EKG (Opsional)</h3>
+                    <p class="text-sm text-slate-500 mt-1">Lengkapi data hasil EKG dan prediksi risiko penyakit kardiovaskular pasien jika tersedia.</p>
+                </div>
+                
+                <div class="grid gap-6 mb-6 sm:grid-cols-2 p-5 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <div class="sm:col-span-2">
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Hasil EKG (Deskriptif)</label>
+                        <textarea name="hasil_ekg" rows="3" class="block p-3 w-full text-sm text-slate-900 bg-white rounded-xl border border-slate-300 focus:ring-primary-500 focus:border-primary-500 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white" placeholder="Jelaskan hasil EKG..."></textarea>
+                    </div>
+                    
+                    <div class="sm:col-span-2">
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Prediksi Risiko Penyakit Kardiovaskular</label>
+                        <select name="prediksi_risiko_kardiovaskular" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                            <option value="">-- Pilih Risiko --</option>
+                            <option value="< 5 %" class="text-emerald-600 font-semibold">&lt; 5 % (Hijau)</option>
+                            <option value="5 - < 10 %" class="text-yellow-500 font-semibold">5 - &lt; 10 % (Kuning)</option>
+                            <option value="10 - < 20 %" class="text-orange-500 font-semibold">10 - &lt; 20 % (Orange)</option>
+                            <option value="20 - < 30 %" class="text-rose-500 font-semibold">20 - &lt; 30 % (Merah)</option>
+                            <option value="> 30 %" class="text-rose-800 font-semibold">&gt; 30 % (Merah Tua / Maroon)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="sm:col-span-2 mt-2 border-t border-slate-200 dark:border-slate-700 pt-4">
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Upload Dokumen Hasil EKG (PDF/JPG/PNG)</label>
+                        <input type="file" name="dokumen_ekg" accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 border border-slate-300 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-600 dark:file:bg-primary-900/30 dark:file:text-primary-400">
+                    </div>
+                </div>
+
+                <div class="flex justify-between pt-4 border-t border-slate-100 dark:border-slate-700">
+                    <button type="button" @click="step = 4" class="inline-flex items-center px-6 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 focus:ring-4 focus:outline-none focus:ring-slate-100 shadow-sm transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        Kembali
+                    </button>
+                    <button type="submit" class="inline-flex items-center px-6 py-2.5 text-sm font-bold text-white bg-emerald-600 rounded-xl hover:bg-emerald-700 focus:ring-4 focus:outline-none focus:ring-emerald-300 shadow-sm transition-all hover:scale-[1.02]">
+                        Simpan Data Rekam Medis
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     </button>
                 </div>
             </div>
@@ -326,6 +425,13 @@
                     if (this.selectedPasienId) {
                         this.selectedPasien = patientsData[this.selectedPasienId] || null;
                     }
+                    setTimeout(() => {
+                        new TomSelect('#diagnoses', {
+                            plugins: ['remove_button'],
+                            placeholder: 'Pilih satu atau lebih diagnosis...',
+                            maxItems: null
+                        });
+                    }, 100);
                 },
                 showLab: false,
                 bb: '',

@@ -26,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('master-pekerjaan', \App\Http\Controllers\MasterPekerjaanController::class)->except(['create', 'show', 'edit']);
         Route::resource('master-kelurahan', \App\Http\Controllers\MasterKelurahanController::class)->except(['create', 'show', 'edit']);
         Route::resource('master-dukuh', \App\Http\Controllers\MasterDukuhController::class)->except(['create', 'show', 'edit']);
+        Route::resource('master-diagnosis', \App\Http\Controllers\MasterDiagnosisController::class)->except(['create', 'show', 'edit']);
     });
 
     Route::get('/pasien/{pasien}/print', [PasienController::class, 'printPdf'])->name('pasien.print');
@@ -37,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('pemeriksaan', PemeriksaanController::class);
 
     Route::get('laporan', [\App\Http\Controllers\LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('laporan/register', [\App\Http\Controllers\LaporanController::class, 'register'])->name('laporan.register');
     Route::post('laporan/preview', [\App\Http\Controllers\LaporanController::class, 'preview'])->name('laporan.preview');
     Route::post('laporan/export/csv', [\App\Http\Controllers\LaporanController::class, 'exportCsv'])->name('laporan.export.csv');
     Route::post('laporan/export/pdf', [\App\Http\Controllers\LaporanController::class, 'exportPdf'])->name('laporan.export.pdf');

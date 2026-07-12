@@ -177,7 +177,13 @@
                                         </div>
                                         <div class="col-span-2 bg-white dark:bg-slate-800 p-3 rounded-lg border border-slate-100 dark:border-slate-700">
                                             <p class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Diagnosis</p>
-                                            <p class="font-bold {{ $pemeriksaan->diagnosis == 'HT terkontrol' ? 'text-emerald-600' : 'text-rose-600' }}">{{ $pemeriksaan->diagnosis }}</p>
+                                            <p class="font-bold text-slate-700 dark:text-slate-300">
+                                                @forelse($pemeriksaan->diagnoses as $diagnosis)
+                                                    <span class="inline-block mr-1 {{ stripos($diagnosis->nama_diagnosis, 'tidak terkontrol') !== false ? 'text-rose-600' : 'text-emerald-600' }}">{{ $diagnosis->nama_diagnosis }}@if(!$loop->last), @endif</span>
+                                                @empty
+                                                    -
+                                                @endforelse
+                                            </p>
                                         </div>
                                     </div>
 

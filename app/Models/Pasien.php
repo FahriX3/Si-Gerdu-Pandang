@@ -61,7 +61,7 @@ class Pasien extends Model
     {
         static::addGlobalScope('puskesmas', function (Builder $builder) {
             if (auth()->check() && auth()->user()->role !== 'admin_dinkes') {
-                $builder->where('id_puskesmas', auth()->user()->id_puskesmas);
+                $builder->where('pasiens.id_puskesmas', auth()->user()->id_puskesmas);
             }
         });
     }

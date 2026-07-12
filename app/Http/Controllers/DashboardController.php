@@ -13,19 +13,19 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         if ($user->role === 'admin_dinkes' && $request->filled('id_puskesmas')) {
-            $pasienQuery->where('id_puskesmas', $request->id_puskesmas);
+            $pasienQuery->where('pasiens.id_puskesmas', $request->id_puskesmas);
             $pemeriksaanQuery->whereHas('pasien', function($q) use ($request) {
                 $q->where('id_puskesmas', $request->id_puskesmas);
             });
         }
         if ($request->filled('id_kelurahan')) {
-            $pasienQuery->where('id_kelurahan', $request->id_kelurahan);
+            $pasienQuery->where('pasiens.id_kelurahan', $request->id_kelurahan);
             $pemeriksaanQuery->whereHas('pasien', function($q) use ($request) {
                 $q->where('id_kelurahan', $request->id_kelurahan);
             });
         }
         if ($request->filled('tahun')) {
-            $pasienQuery->whereYear('tanggal_awal_terdaftar', $request->tahun);
+            $pasienQuery->whereYear('pasiens.tanggal_awal_terdaftar', $request->tahun);
             $pemeriksaanQuery->whereYear('tanggal_pemeriksaan', $request->tahun);
         }
     }
@@ -38,7 +38,9 @@ class DashboardController extends Controller
         $pemeriksaanQuery = Pemeriksaan::query();
         
         // Simpan referensi query murni untuk Hipertensi sebelum difilter tahun
-        $htQuery = Pemeriksaan::where('diagnosis', 'HT tidak terkontrol')
+        $htQuery = Pemeriksaan::whereHas('diagnoses', function($q) {
+                $q->where('nama_diagnosis', 'like', '%tidak terkontrol%');
+            })
             ->whereDate('tanggal_pemeriksaan', '>=', now()->subDays(30));
 
         // Untuk apply kalurahan & puskesmas ke HT query
@@ -130,7 +132,9 @@ class DashboardController extends Controller
         $pasienQuery = Pasien::query();
         $pemeriksaanQuery = Pemeriksaan::query();
         
-        $htQuery = Pemeriksaan::where('diagnosis', 'HT tidak terkontrol')
+        $htQuery = Pemeriksaan::whereHas('diagnoses', function($q) {
+                $q->where('nama_diagnosis', 'like', '%tidak terkontrol%');
+            })
             ->whereDate('tanggal_pemeriksaan', '>=', now()->subDays(30));
 
         // Untuk apply kalurahan & puskesmas ke HT query

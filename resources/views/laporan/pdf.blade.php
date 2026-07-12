@@ -97,7 +97,7 @@
                 <td>{{ $p->kategori_tensi }}</td>
                 <td class="text-center">{{ $p->imt }}</td>
                 <td>{{ $p->status_imt }}</td>
-                <td>{{ $p->diagnosis }}</td>
+                <td>{{ $p->diagnoses->pluck('nama_diagnosis')->join(', ') ?: '-' }}</td>
                 <td>
                     @if($p->terapiObats && count($p->terapiObats) > 0)
                         <ul style="margin: 0; padding-left: 12px; font-size: 9px;">

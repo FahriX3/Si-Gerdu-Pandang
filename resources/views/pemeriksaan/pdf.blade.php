@@ -86,7 +86,7 @@
 
     <div class="section-title">KESIMPULAN DIAGNOSIS</div>
     <p style="padding: 10px; border: 1px dashed #666; font-size: 14px; font-weight: bold; text-transform: uppercase;">
-        {{ $pemeriksaan->diagnosis }}
+        {{ $pemeriksaan->diagnoses->pluck('nama_diagnosis')->join(', ') ?: '-' }}
     </p>
 
     <div class="section-title">TERAPI OBAT & RESEP</div>

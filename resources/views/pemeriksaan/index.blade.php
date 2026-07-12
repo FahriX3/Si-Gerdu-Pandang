@@ -96,17 +96,15 @@
                         </td>
                         <td class="md:px-5 md:py-4 mb-2 md:mb-0 flex md:table-cell items-center justify-between md:justify-start">
                             <span class="md:hidden text-xs text-slate-500 font-semibold uppercase">Diagnosis</span>
-                            @if($pemeriksaan->diagnosis === 'HT terkontrol')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800/50">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    Terkontrol
-                                </span>
-                            @else
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/50">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                                    Tidak Terkontrol
-                                </span>
-                            @endif
+                            <div class="flex flex-wrap gap-1 mt-1">
+                                @forelse($pemeriksaan->diagnoses as $diagnosis)
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium {{ stripos($diagnosis->nama_diagnosis, 'tidak terkontrol') !== false ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200' }}">
+                                        {{ mb_strtoupper($diagnosis->nama_diagnosis) }}
+                                    </span>
+                                @empty
+                                    <span class="text-xs text-slate-500">-</span>
+                                @endforelse
+                            </div>
                         </td>
                         <td class="md:px-5 md:py-4 mb-3 md:mb-0 flex md:table-cell items-center justify-between md:justify-start text-slate-600 dark:text-slate-400">
                             <span class="md:hidden text-xs text-slate-500 font-semibold uppercase">Petugas</span>

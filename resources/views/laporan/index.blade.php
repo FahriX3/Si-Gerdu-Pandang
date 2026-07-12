@@ -1,12 +1,25 @@
 <x-app-layout>
     <x-slot name="header">
-        <div>
-            <h2 class="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">
-                {{ __('Laporan & Ekspor Data') }}
-            </h2>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Saring data pemeriksaan dan unduh laporan untuk analisis lanjutan.</p>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">
+                    {{ __('Laporan') }}
+                </h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Saring data pemeriksaan dan unduh laporan untuk analisis lanjutan.</p>
+            </div>
         </div>
     </x-slot>
+
+    <div class="mb-6 bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700 sm:rounded-2xl px-6 lg:px-8">
+        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+            <a href="{{ route('laporan.index') }}" class="border-primary-500 text-primary-600 dark:text-primary-400 whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-sm">
+                Laporan Bulanan
+            </a>
+            <a href="{{ route('laporan.register') }}" class="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300 dark:hover:border-slate-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                Laporan Tahunan (Buku Register)
+            </a>
+        </nav>
+    </div>
 
     <div class="bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700 sm:rounded-2xl p-6 lg:p-8">
         

@@ -95,7 +95,7 @@ class LaporanController extends Controller
                 'lp' => $p->lingkar_perut,
                 'imt' => $p->imt,
                 'status_imt' => $p->status_imt,
-                'diagnosis' => $p->diagnosis,
+                'diagnosis' => $p->diagnoses->pluck('nama_diagnosis')->join(', '),
                 'obat' => $obatText,
                 'petugas' => $p->pemeriksa->name ?? '-'
             ];
@@ -127,7 +127,11 @@ class LaporanController extends Controller
 
         $callback = function() use($pemeriksaans, $columns) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, $columns);
+            
+            // Add BOM for Excel UTF-8 compatibility
+            fputs($file, "\xEF\xBB\xBF");
+            
+            fputcsv($file, $columns, ';');
 
             foreach ($pemeriksaans as $p) {
                 // Parse obat
@@ -157,12 +161,12 @@ class LaporanController extends Controller
                     $p->lingkar_perut,
                     $p->imt,
                     $p->status_imt,
-                    $p->diagnosis,
+                    $p->diagnoses->pluck('nama_diagnosis')->join(', '),
                     $obatText,
                     $p->pemeriksa->name ?? '-'
                 ];
 
-                fputcsv($file, $row);
+                fputcsv($file, $row, ';');
             }
 
             fclose($file);
@@ -198,5 +202,39 @@ class LaporanController extends Controller
 
         $filename = "laporan_pemeriksaan_" . date('Ymd_His') . ".pdf";
         return $pdf->download($filename);
+    }
+
+    public function register(Request $request)
+    {
+        $puskesmas = [];
+        $kelurahans = [];
+        if (auth()->user()->role === 'admin_dinkes') {
+            $puskesmas = MasterPuskesmas::all();
+            $kelurahans = \App\Models\MasterKelurahan::orderBy('nama_kelurahan')->get();
+        } else {
+            $kelurahans = \App\Models\MasterKelurahan::where('id_puskesmas', auth()->user()->id_puskesmas)->orderBy('nama_kelurahan')->get();
+        }
+        
+        $tahun = $request->input('tahun', date('Y'));
+        
+        $pasienQuery = \App\Models\Pasien::with(['pemeriksaans' => function($q) use ($tahun) {
+            $q->whereYear('tanggal_pemeriksaan', $tahun)
+              ->with('terapiObats')
+              ->orderBy('tanggal_pemeriksaan', 'asc');
+        }]);
+
+        if (auth()->user()->role !== 'admin_dinkes') {
+            $pasienQuery->where('pasiens.id_puskesmas', auth()->user()->id_puskesmas);
+        } else if ($request->filled('id_puskesmas')) {
+            $pasienQuery->where('pasiens.id_puskesmas', $request->id_puskesmas);
+        }
+
+        if ($request->filled('id_kelurahan')) {
+            $pasienQuery->where('pasiens.id_kelurahan', $request->id_kelurahan);
+        }
+        
+        $pasiens = $pasienQuery->orderBy('nama_lengkap', 'asc')->get();
+
+        return view('laporan.register', compact('puskesmas', 'kelurahans', 'pasiens', 'tahun'));
     }
 }

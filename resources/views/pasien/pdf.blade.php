@@ -93,7 +93,7 @@
                         IMT: {{ $pem->imt }}
                     </td>
                     <td>{{ $pem->keluhan }}</td>
-                    <td style="font-weight: bold;">{{ $pem->diagnosis }}</td>
+                    <td style="font-weight: bold;">{{ $pem->diagnoses->pluck('nama_diagnosis')->join(', ') ?: '-' }}</td>
                     <td>
                         <ul style="margin: 0; padding-left: 15px;">
                             @foreach($pem->terapiObats as $obat)

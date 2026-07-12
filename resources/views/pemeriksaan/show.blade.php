@@ -103,17 +103,16 @@
                     <div class="flex flex-col sm:flex-row gap-6 justify-between items-start sm:items-center">
                         <div class="flex-1">
                             <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Kesimpulan Diagnosis</h3>
-                            @if($pemeriksaan->diagnosis === 'HT terkontrol')
-                                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800/50 shadow-sm">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    HIPERTENSI TERKONTROL
-                                </div>
-                            @else
-                                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/50 shadow-sm">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                                    HIPERTENSI TIDAK TERKONTROL
-                                </div>
-                            @endif
+                            <div class="flex flex-wrap gap-2">
+                                @forelse($pemeriksaan->diagnoses as $diagnosis)
+                                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800/50 shadow-sm">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        {{ mb_strtoupper($diagnosis->nama_diagnosis) }}
+                                    </div>
+                                @empty
+                                    <span class="text-sm text-slate-500">Tidak ada diagnosis tercatat.</span>
+                                @endforelse
+                            </div>
                         </div>
                         
                         <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700 text-center w-full sm:w-48">
@@ -161,6 +160,10 @@
                             <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->lingkar_perut }} <span class="text-sm font-normal text-slate-500">cm</span></span>
                         </div>
                         <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">LILA</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->lila ?? '-' }} <span class="text-sm font-normal text-slate-500">cm</span></span>
+                        </div>
+                        <div>
                             <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Nadi</span>
                             <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->nadi }} <span class="text-sm font-normal text-slate-500">x/mnt</span></span>
                         </div>
@@ -190,12 +193,86 @@
                             <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Asam Urat</span>
                             <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->asam_urat ?? '-' }}</span>
                         </div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">HBA1C</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->hba1c ?? '-' }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Ureum</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->ureum ?? '-' }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Kreatinin</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->kreatinin ?? '-' }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">eGFR</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->egfr ?? '-' }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">HDL</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->hdl ?? '-' }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">LDL</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->ldl ?? '-' }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Trigliserida</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->trigliserida ?? '-' }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Rasio Kol/HDL</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->rasio_kolesterol_hdl ?? '-' }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">SGPT</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->sgpt ?? '-' }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Mikroalbumin Kuantitatif</span>
+                            <span class="text-base font-bold text-slate-900 dark:text-white">{{ $pemeriksaan->mikroalbumin_kuantitatif ?? '-' }}</span>
+                        </div>
                         <div class="sm:col-span-2">
                             <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Dokumen Lab</span>
                             @if($pemeriksaan->dokumen_lab)
                                 <a href="{{ asset('storage/' . $pemeriksaan->dokumen_lab) }}" target="_blank" class="inline-flex items-center text-sm font-bold text-primary-600 hover:text-primary-700">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                                    Lihat File
+                                    Lihat File Lab
+                                </a>
+                            @else
+                                <span class="text-sm font-medium text-slate-400">-</span>
+                            @endif
+                        </div>
+                        
+                        <div class="sm:col-span-4 mt-2 mb-2 pt-4 border-t border-slate-100 dark:border-slate-700"><h4 class="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider">Hasil EKG</h4></div>
+                        <div class="sm:col-span-2">
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Hasil EKG (Deskriptif)</span>
+                            <span class="text-base font-medium text-slate-900 dark:text-white">{{ $pemeriksaan->hasil_ekg ?? '-' }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Prediksi Risiko KV</span>
+                            @if($pemeriksaan->prediksi_risiko_kardiovaskular)
+                                @php
+                                    $color = 'text-slate-900 dark:text-white';
+                                    $bg = 'bg-slate-100 dark:bg-slate-700';
+                                    if(str_contains($pemeriksaan->prediksi_risiko_kardiovaskular, '< 5 %')) { $color = 'text-emerald-700 dark:text-emerald-400'; $bg = 'bg-emerald-100 dark:bg-emerald-900/30'; }
+                                    elseif(str_contains($pemeriksaan->prediksi_risiko_kardiovaskular, '5 - < 10 %')) { $color = 'text-yellow-700 dark:text-yellow-400'; $bg = 'bg-yellow-100 dark:bg-yellow-900/30'; }
+                                    elseif(str_contains($pemeriksaan->prediksi_risiko_kardiovaskular, '10 - < 20 %')) { $color = 'text-orange-700 dark:text-orange-400'; $bg = 'bg-orange-100 dark:bg-orange-900/30'; }
+                                    elseif(str_contains($pemeriksaan->prediksi_risiko_kardiovaskular, '20 - < 30 %')) { $color = 'text-rose-600 dark:text-rose-400'; $bg = 'bg-rose-100 dark:bg-rose-900/30'; }
+                                    elseif(str_contains($pemeriksaan->prediksi_risiko_kardiovaskular, '> 30 %')) { $color = 'text-rose-900 dark:text-rose-200'; $bg = 'bg-rose-300 dark:bg-rose-900/70'; }
+                                @endphp
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold tracking-wide {{ $color }} {{ $bg }}">{{ $pemeriksaan->prediksi_risiko_kardiovaskular }}</span>
+                            @else
+                                <span class="text-base font-medium text-slate-900 dark:text-white">-</span>
+                            @endif
+                        </div>
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Dokumen EKG</span>
+                            @if($pemeriksaan->dokumen_ekg)
+                                <a href="{{ asset('storage/' . $pemeriksaan->dokumen_ekg) }}" target="_blank" class="inline-flex items-center text-sm font-bold text-primary-600 hover:text-primary-700">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                                    Lihat File EKG
                                 </a>
                             @else
                                 <span class="text-sm font-medium text-slate-400">-</span>
