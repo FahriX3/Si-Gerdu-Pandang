@@ -24,10 +24,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('puskesmas', PuskesmasController::class);
         Route::resource('master-obat', \App\Http\Controllers\MasterObatController::class)->except(['create', 'show', 'edit']);
         Route::resource('master-pekerjaan', \App\Http\Controllers\MasterPekerjaanController::class)->except(['create', 'show', 'edit']);
+        Route::resource('master-kelurahan', \App\Http\Controllers\MasterKelurahanController::class)->except(['create', 'show', 'edit']);
+        Route::resource('master-dukuh', \App\Http\Controllers\MasterDukuhController::class)->except(['create', 'show', 'edit']);
     });
 
     Route::get('/pasien/{pasien}/print', [PasienController::class, 'printPdf'])->name('pasien.print');
     Route::post('/pasien/export-register', [\App\Http\Controllers\PasienController::class, 'exportRegisterPdf'])->name('pasien.exportRegisterPdf');
+    Route::get('/pasien/dukuhs', [PasienController::class, 'getDukuhs'])->name('pasien.dukuhs');
     Route::resource('pasien', PasienController::class);
     
     Route::get('/pemeriksaan/{pemeriksaan}/print', [PemeriksaanController::class, 'printPdf'])->name('pemeriksaan.print');

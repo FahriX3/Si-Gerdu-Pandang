@@ -30,11 +30,8 @@
         <div class="w-full max-w-md">
             <!-- Logo Section -->
             <div class="flex flex-col items-center justify-center mb-8">
-                <div class="bg-white p-3 rounded-2xl shadow-sm mb-4">
-                    <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="w-16 h-16 object-contain" />
-                </div>
-                <h1 class="text-2xl font-bold text-slate-800 tracking-tight text-center">SI GERDU PANDANG</h1>
-                <p class="text-sm text-slate-500 mt-1 text-center">Sistem Informasi Gerakan Terpadu Pemeriksaan Darah Tinggi</p>
+                <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="w-auto h-32 object-contain mb-4" />
+                <p class="text-sm text-slate-500 mt-1 text-center">Sistem Informasi Gerakan Terpadu Penanganan Penyakit Tidak Menular</p>
             </div>
 
             <!-- Form Card -->

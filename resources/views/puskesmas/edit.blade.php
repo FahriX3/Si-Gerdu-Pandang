@@ -52,38 +52,20 @@
                 <div class="pt-4 border-t border-slate-100 dark:border-slate-700">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="text-lg font-bold text-slate-800 dark:text-white">Daftar Kelurahan Naungan</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">Tambahkan kelurahan yang masuk dalam wilayah kerja puskesmas ini.</p>
+                            <h3 class="text-lg font-bold text-slate-800 dark:text-white">Daftar Kalurahan Naungan</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Kalurahan yang masuk dalam wilayah kerja puskesmas ini dikelola melalui menu <a href="{{ route('master-kelurahan.index') }}" class="text-primary-600 font-semibold hover:underline">Master Kalurahan</a>.</p>
                         </div>
-                        <button type="button" onclick="addKelurahan()" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-slate-800 dark:bg-slate-700 rounded-lg hover:bg-slate-700 dark:hover:bg-slate-600 transition-colors">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                            Tambah Kelurahan
-                        </button>
                     </div>
                     
-                    <datalist id="kelurahan-suggestions">
-                        @foreach($semuaKelurahans as $sk)
-                            <option value="{{ $sk->nama_kelurahan }}">
-                        @endforeach
-                    </datalist>
-                    
-                    <div id="kelurahan-container" class="space-y-3">
+                    <div class="flex flex-wrap gap-2 mt-4">
                         @if($puskesma->kelurahans && $puskesma->kelurahans->count() > 0)
                             @foreach($puskesma->kelurahans as $kel)
-                            <div class="flex items-center gap-3 kelurahan-item">
-                                <input type="text" name="kelurahans[]" list="kelurahan-suggestions" value="{{ $kel->nama_kelurahan }}" placeholder="Nama Kelurahan" class="flex-1 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
-                                <button type="button" onclick="removeKelurahan(this)" class="p-3 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-xl transition-colors" title="Hapus">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                </button>
-                            </div>
+                                <span class="px-3 py-1.5 bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400 border border-primary-200 dark:border-primary-800/50 rounded-xl text-sm font-medium">
+                                    {{ $kel->nama_kelurahan }}
+                                </span>
                             @endforeach
                         @else
-                            <div class="flex items-center gap-3 kelurahan-item">
-                                <input type="text" name="kelurahans[]" list="kelurahan-suggestions" placeholder="Nama Kelurahan" class="flex-1 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
-                                <button type="button" onclick="removeKelurahan(this)" class="p-3 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-xl transition-colors" title="Hapus">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                </button>
-                            </div>
+                            <span class="text-sm text-slate-500 italic">Belum ada kalurahan yang didaftarkan.</span>
                         @endif
                     </div>
                 </div>
@@ -116,27 +98,5 @@
                 sortField: { field: "text", direction: "asc" }
             });
         });
-
-        function addKelurahan() {
-            const container = document.getElementById('kelurahan-container');
-            const item = document.createElement('div');
-            item.className = 'flex items-center gap-3 kelurahan-item';
-            item.innerHTML = `
-                <input type="text" name="kelurahans[]" list="kelurahan-suggestions" placeholder="Nama Kelurahan" class="flex-1 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
-                <button type="button" onclick="removeKelurahan(this)" class="p-3 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-xl transition-colors" title="Hapus">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                </button>
-            `;
-            container.appendChild(item);
-        }
-
-        function removeKelurahan(btn) {
-            const items = document.querySelectorAll('.kelurahan-item');
-            if (items.length > 1) {
-                btn.closest('.kelurahan-item').remove();
-            } else {
-                btn.closest('.kelurahan-item').querySelector('input').value = '';
-            }
-        }
     </script>
 </x-app-layout>

@@ -18,7 +18,7 @@ class Pasien extends Model
     protected $fillable = [
         'id_pasien', 'id_puskesmas', 'nama_lengkap', 'tanggal_lahir', 'jenis_kelamin',
         'nik', 'no_kk', 'no_rm', 'nama_kepala_keluarga', 'status_peserta',
-        'tanggal_meninggal', 'kalurahan', 'dukuh', 'rt', 'rw', 'no_hp',
+        'tanggal_meninggal', 'id_kelurahan', 'id_dukuh', 'rt', 'rw', 'no_hp',
         'no_jkn', 'tanggal_awal_terdaftar', 'jenis_prolanis', 'status_peserta_prb',
         'riwayat_hipertensi_keluarga', 'jenis_pekerjaan', 'status_merokok'
     ];
@@ -40,6 +40,16 @@ class Pasien extends Model
     public function puskesmas(): BelongsTo
     {
         return $this->belongsTo(MasterPuskesmas::class, 'id_puskesmas', 'id_puskesmas');
+    }
+
+    public function kelurahan(): BelongsTo
+    {
+        return $this->belongsTo(MasterKelurahan::class, 'id_kelurahan', 'id_kelurahan');
+    }
+
+    public function dukuhM(): BelongsTo
+    {
+        return $this->belongsTo(MasterDukuh::class, 'id_dukuh', 'id_dukuh');
     }
 
     public function pemeriksaans(): HasMany

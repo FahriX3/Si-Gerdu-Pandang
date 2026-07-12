@@ -15,7 +15,7 @@ class LaporanController extends Controller
         $kelurahans = [];
         if (auth()->user()->role === 'admin_dinkes') {
             $puskesmas = MasterPuskesmas::all();
-            $kelurahans = \App\Models\MasterKelurahan::select('nama_kelurahan')->distinct()->orderBy('nama_kelurahan')->get();
+            $kelurahans = \App\Models\MasterKelurahan::orderBy('nama_kelurahan')->get();
         } else {
             $kelurahans = \App\Models\MasterKelurahan::where('id_puskesmas', auth()->user()->id_puskesmas)->orderBy('nama_kelurahan')->get();
         }
@@ -56,10 +56,9 @@ class LaporanController extends Controller
             $query->where('status_imt', $request->status_imt);
         }
 
-        // Kalurahan Filter
-        if ($request->filled('kalurahan')) {
+        if ($request->filled('id_kelurahan')) {
             $query->whereHas('pasien', function ($q) use ($request) {
-                $q->where('kalurahan', 'like', '%' . $request->kalurahan . '%');
+                $q->where('id_kelurahan', $request->id_kelurahan);
             });
         }
 
@@ -87,7 +86,7 @@ class LaporanController extends Controller
                 'jenis_kelamin' => $p->pasien->jenis_kelamin ?? '-',
                 'usia' => $p->pasien->umur ?? '-',
                 'alamat' => $p->pasien->alamat ?? '-',
-                'kalurahan' => $p->pasien->kalurahan ?? '-',
+                'kalurahan' => $p->pasien->kelurahan->nama_kelurahan ?? '-',
                 'puskesmas' => $p->pasien->puskesmas->nama_puskesmas ?? '-',
                 'tensi' => $p->systole . '/' . $p->diastole,
                 'kategori_tensi' => $p->kategori_tensi,

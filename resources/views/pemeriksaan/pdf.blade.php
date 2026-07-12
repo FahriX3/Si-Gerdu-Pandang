@@ -41,7 +41,7 @@
         </tr>
         <tr>
             <td class="label">Domisili</td>
-            <td colspan="3">: {{ $pemeriksaan->pasien->kalurahan ?? '-' }} {{ $pemeriksaan->pasien->dukuh ? ', '.$pemeriksaan->pasien->dukuh : '' }}</td>
+            <td colspan="3">: {{ $pemeriksaan->pasien->kelurahan->nama_kelurahan ?? '-' }} {{ $pemeriksaan->pasien->dukuhM ? ', '.$pemeriksaan->pasien->dukuhM->nama_dukuh : '' }}</td>
         </tr>
     </table>
 

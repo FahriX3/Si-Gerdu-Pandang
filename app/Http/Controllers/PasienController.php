@@ -22,7 +22,7 @@ class PasienController extends Controller
         }
 
         if (auth()->user()->role === 'admin_dinkes') {
-            $kelurahans = \App\Models\MasterKelurahan::select('nama_kelurahan')->distinct()->orderBy('nama_kelurahan')->get();
+            $kelurahans = \App\Models\MasterKelurahan::orderBy('nama_kelurahan')->get();
         }
 
         if ($request->has('search') && $request->search != '') {
@@ -56,12 +56,12 @@ class PasienController extends Controller
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'nik' => 'required|numeric|digits:16|unique:pasiens,nik',
-            'no_kk' => 'required|numeric|digits:16',
-            'nama_kepala_keluarga' => 'required|string|max:255',
+            'no_kk' => 'nullable|numeric|digits:16',
+            'nama_kepala_keluarga' => 'nullable|string|max:255',
             'status_peserta' => 'required|in:Aktif,Meninggal,Pindah Domisili,Non-Aktif',
             'tanggal_meninggal' => 'nullable|date',
-            'kalurahan' => 'required|string|max:255',
-            'dukuh' => 'nullable|string|max:255',
+            'id_kelurahan' => 'required|exists:master_kelurahans,id_kelurahan',
+            'id_dukuh' => 'nullable|exists:master_dukuhs,id_dukuh',
             'rt' => 'nullable|string|max:5',
             'rw' => 'nullable|string|max:5',
             'no_hp' => 'nullable|string|max:20',
@@ -72,7 +72,7 @@ class PasienController extends Controller
             'jenis_prolanis.*' => 'in:HT,DM',
             'status_peserta_prb' => 'nullable|in:HT,DM,Penyakit Jantung,PPOK,Asma',
             'riwayat_hipertensi_keluarga' => 'required|in:Ya,Tidak,Tidak Tahu',
-            'jenis_pekerjaan' => 'required|string|max:255',
+            'jenis_pekerjaan' => 'nullable|string|max:255',
             'status_merokok' => 'required|in:Merokok,Tidak Merokok,Sudah Berhenti Merokok',
         ];
 
@@ -84,6 +84,10 @@ class PasienController extends Controller
 
         if (auth()->user()->role !== 'admin_dinkes') {
             $validated['id_puskesmas'] = auth()->user()->id_puskesmas;
+        }
+
+        if (isset($validated['jenis_prolanis']) && is_array($validated['jenis_prolanis'])) {
+            $validated['jenis_prolanis'] = implode(', ', $validated['jenis_prolanis']);
         }
 
         Pasien::create($validated);
@@ -117,12 +121,12 @@ class PasienController extends Controller
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'nik' => 'required|numeric|digits:16|unique:pasiens,nik,'.$pasien->id_pasien.',id_pasien',
-            'no_kk' => 'required|numeric|digits:16',
-            'nama_kepala_keluarga' => 'required|string|max:255',
+            'no_kk' => 'nullable|numeric|digits:16',
+            'nama_kepala_keluarga' => 'nullable|string|max:255',
             'status_peserta' => 'required|in:Aktif,Meninggal,Pindah Domisili,Non-Aktif',
             'tanggal_meninggal' => 'nullable|date',
-            'kalurahan' => 'required|string|max:255',
-            'dukuh' => 'nullable|string|max:255',
+            'id_kelurahan' => 'required|exists:master_kelurahans,id_kelurahan',
+            'id_dukuh' => 'nullable|exists:master_dukuhs,id_dukuh',
             'rt' => 'nullable|string|max:5',
             'rw' => 'nullable|string|max:5',
             'no_hp' => 'nullable|string|max:20',
@@ -133,7 +137,7 @@ class PasienController extends Controller
             'jenis_prolanis.*' => 'in:HT,DM',
             'status_peserta_prb' => 'nullable|in:HT,DM,Penyakit Jantung,PPOK,Asma',
             'riwayat_hipertensi_keluarga' => 'required|in:Ya,Tidak,Tidak Tahu',
-            'jenis_pekerjaan' => 'required|string|max:255',
+            'jenis_pekerjaan' => 'nullable|string|max:255',
             'status_merokok' => 'required|in:Merokok,Tidak Merokok,Sudah Berhenti Merokok',
         ];
 
@@ -195,9 +199,12 @@ class PasienController extends Controller
             }
     
             // Kalurahan Filter
-            if ($request->filled('kalurahan')) {
-                $query->where('kalurahan', 'like', '%' . $request->kalurahan . '%');
-                $filterTexts[] = "Kalurahan: " . strtoupper($request->kalurahan);
+            if ($request->filled('id_kelurahan')) {
+                $query->where('id_kelurahan', $request->id_kelurahan);
+                $kel = \App\Models\MasterKelurahan::find($request->id_kelurahan);
+                if ($kel) {
+                    $filterTexts[] = "Kalurahan: " . strtoupper($kel->nama_kelurahan);
+                }
             }
         }
 
@@ -214,7 +221,13 @@ class PasienController extends Controller
             }
         }
 
-        $kalurahanName = (!$noFilter && $request->filled('kalurahan')) ? strtoupper($request->kalurahan) : 'SEMUA KALURAHAN';
+        $kalurahanName = 'SEMUA KALURAHAN';
+        if (!$noFilter && $request->filled('id_kelurahan')) {
+            $kel = \App\Models\MasterKelurahan::find($request->id_kelurahan);
+            if ($kel) {
+                $kalurahanName = strtoupper($kel->nama_kelurahan);
+            }
+        }
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pasien.pdf_register', [
             'pasiens' => $pasiens,
@@ -226,5 +239,18 @@ class PasienController extends Controller
         
         $pdf->setPaper('A4', 'landscape');
         return $pdf->download("register_peserta_" . date('Ymd_His') . ".pdf");
+    }
+    public function getDukuhs(Request $request)
+    {
+        $id_kelurahan = $request->query('kelurahan');
+        if (!$id_kelurahan) {
+            return response()->json([]);
+        }
+
+        $dukuhs = \App\Models\MasterDukuh::where('id_kelurahan', $id_kelurahan)
+            ->orderBy('nama_dukuh')
+            ->get();
+
+        return response()->json($dukuhs);
     }
 }

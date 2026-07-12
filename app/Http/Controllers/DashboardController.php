@@ -18,10 +18,10 @@ class DashboardController extends Controller
                 $q->where('id_puskesmas', $request->id_puskesmas);
             });
         }
-        if ($request->filled('kalurahan')) {
-            $pasienQuery->where('kalurahan', 'like', '%' . $request->kalurahan . '%');
+        if ($request->filled('id_kelurahan')) {
+            $pasienQuery->where('id_kelurahan', $request->id_kelurahan);
             $pemeriksaanQuery->whereHas('pasien', function($q) use ($request) {
-                $q->where('kalurahan', 'like', '%' . $request->kalurahan . '%');
+                $q->where('id_kelurahan', $request->id_kelurahan);
             });
         }
         if ($request->filled('tahun')) {
@@ -47,9 +47,9 @@ class DashboardController extends Controller
                 $q->where('id_puskesmas', $request->id_puskesmas);
             });
         }
-        if ($request->filled('kalurahan')) {
+        if ($request->filled('id_kelurahan')) {
             $htQuery->whereHas('pasien', function($q) use ($request) {
-                $q->where('kalurahan', 'like', '%' . $request->kalurahan . '%');
+                $q->where('id_kelurahan', $request->id_kelurahan);
             });
         }
 
@@ -67,8 +67,9 @@ class DashboardController extends Controller
                 ->groupBy('master_puskesmas.nama_puskesmas')
                 ->get();
         } else {
-            $grafikData = $distQuery->select('kalurahan as label', DB::raw('count(id_pasien) as total'))
-                ->groupBy('kalurahan')
+            $grafikData = $distQuery->select('master_kelurahans.nama_kelurahan as label', DB::raw('count(pasiens.id_pasien) as total'))
+                ->join('master_kelurahans', 'pasiens.id_kelurahan', '=', 'master_kelurahans.id_kelurahan')
+                ->groupBy('master_kelurahans.nama_kelurahan')
                 ->get();
         }
 
@@ -82,9 +83,9 @@ class DashboardController extends Controller
                 $q->where('id_puskesmas', $request->id_puskesmas);
             });
         }
-        if ($request->filled('kalurahan')) {
+        if ($request->filled('id_kelurahan')) {
             $trendQuery->whereHas('pasien', function($q) use ($request) {
-                $q->where('kalurahan', 'like', '%' . $request->kalurahan . '%');
+                $q->where('id_kelurahan', $request->id_kelurahan);
             });
         }
         
@@ -105,17 +106,17 @@ class DashboardController extends Controller
         
         if ($user->role === 'admin_dinkes') {
             if ($request->filled('id_puskesmas')) {
-                $kalurahans = \App\Models\MasterKelurahan::where('id_puskesmas', $request->id_puskesmas)->orderBy('nama_kelurahan')->pluck('nama_kelurahan');
+                $kalurahans = \App\Models\MasterKelurahan::where('id_puskesmas', $request->id_puskesmas)->orderBy('nama_kelurahan')->get();
             } else {
-                $kalurahans = \App\Models\MasterKelurahan::select('nama_kelurahan')->distinct()->orderBy('nama_kelurahan')->pluck('nama_kelurahan');
+                $kalurahans = \App\Models\MasterKelurahan::orderBy('nama_kelurahan')->get();
             }
         } else {
-            $kalurahans = \App\Models\MasterKelurahan::where('id_puskesmas', $user->id_puskesmas)->orderBy('nama_kelurahan')->pluck('nama_kelurahan');
+            $kalurahans = \App\Models\MasterKelurahan::where('id_puskesmas', $user->id_puskesmas)->orderBy('nama_kelurahan')->get();
         }
         
         $filters = [
             'id_puskesmas' => $request->id_puskesmas,
-            'kalurahan' => $request->kalurahan,
+            'id_kelurahan' => $request->id_kelurahan,
             'tahun' => $tahun,
         ];
 
@@ -138,9 +139,9 @@ class DashboardController extends Controller
                 $q->where('id_puskesmas', $request->id_puskesmas);
             });
         }
-        if ($request->filled('kalurahan')) {
+        if ($request->filled('id_kelurahan')) {
             $htQuery->whereHas('pasien', function($q) use ($request) {
-                $q->where('kalurahan', 'like', '%' . $request->kalurahan . '%');
+                $q->where('id_kelurahan', $request->id_kelurahan);
             });
         }
 
@@ -158,8 +159,9 @@ class DashboardController extends Controller
                 ->get();
             $title = 'Distribusi Pasien Per Puskesmas';
         } else {
-            $grafikData = $distQuery->select('kalurahan as label', DB::raw('count(id_pasien) as total'))
-                ->groupBy('kalurahan')
+            $grafikData = $distQuery->select('master_kelurahans.nama_kelurahan as label', DB::raw('count(pasiens.id_pasien) as total'))
+                ->join('master_kelurahans', 'pasiens.id_kelurahan', '=', 'master_kelurahans.id_kelurahan')
+                ->groupBy('master_kelurahans.nama_kelurahan')
                 ->get();
             $title = 'Distribusi Pasien Per Kalurahan';
         }

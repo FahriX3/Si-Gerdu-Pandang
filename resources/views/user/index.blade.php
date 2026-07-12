@@ -47,7 +47,7 @@
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group">
                         <td class="px-5 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary-600 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                                <div class="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
                                     {{ substr($user->name, 0, 1) }}
                                 </div>
                                 <div class="flex flex-col">

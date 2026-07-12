@@ -185,11 +185,11 @@
                                 
                                 <div>
                                     <label class="block mb-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300">Kalurahan</label>
-                                    <select name="kalurahan" id="filter-kalurahan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                                    <select name="id_kelurahan" id="filter-kalurahan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-slate-900 dark:border-slate-700 dark:text-white">
                                         <option value="">-- Semua Kalurahan --</option>
                                         @if(isset($kelurahans))
                                             @foreach($kelurahans as $kel)
-                                                <option value="{{ $kel->nama_kelurahan }}">{{ $kel->nama_kelurahan }}</option>
+                                                <option value="{{ $kel->id_kelurahan }}">{{ $kel->nama_kelurahan }}</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -240,7 +240,7 @@
                             kelurahanSelect.innerHTML = '<option value="">-- Semua Kalurahan --</option>';
                             data.forEach(kel => {
                                 const option = document.createElement('option');
-                                option.value = kel.nama_kelurahan;
+                                option.value = kel.id_kelurahan;
                                 option.textContent = kel.nama_kelurahan;
                                 kelurahanSelect.appendChild(option);
                             });

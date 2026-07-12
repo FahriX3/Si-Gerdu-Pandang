@@ -23,6 +23,40 @@
 
     <div class="bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700 sm:rounded-2xl p-6 lg:p-10" x-data="pemeriksaanTabs()">
         
+        <!-- Identitas Pasien Info Box -->
+        <div x-show="selectedPasien" x-transition style="display: none;" class="mb-8 p-5 bg-emerald-50 border border-emerald-100 rounded-2xl dark:bg-emerald-900/20 dark:border-emerald-800">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-start gap-4 flex-1">
+                    <div class="p-3 bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300 rounded-full shrink-0">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+                        <div>
+                            <p class="text-[10px] text-emerald-600/70 dark:text-emerald-400/70 font-semibold uppercase tracking-wider mb-0.5">Nama</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-slate-200" x-text="selectedPasien?.nama"></p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-emerald-600/70 dark:text-emerald-400/70 font-semibold uppercase tracking-wider mb-0.5">Umur</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-slate-200" x-text="selectedPasien?.umur"></p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-emerald-600/70 dark:text-emerald-400/70 font-semibold uppercase tracking-wider mb-0.5">Jenis Kelamin</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-slate-200" x-text="selectedPasien?.jk"></p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-emerald-600/70 dark:text-emerald-400/70 font-semibold uppercase tracking-wider mb-0.5">Alamat</p>
+                            <p class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate" x-text="selectedPasien?.alamat" :title="selectedPasien?.alamat"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <a :href="`/pasien/${selectedPasienId}`" target="_blank" class="shrink-0 inline-flex items-center px-4 py-2 text-sm font-medium text-emerald-700 bg-white border border-emerald-300 rounded-xl hover:bg-emerald-50 focus:ring-4 focus:outline-none focus:ring-emerald-100 shadow-sm transition-colors dark:bg-slate-800 dark:text-emerald-400 dark:border-emerald-700 dark:hover:bg-slate-700">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Lihat Histori Pemeriksaan
+                </a>
+            </div>
+        </div>
+
         <!-- Tabs Header -->
         <div class="flex space-x-2 border-b border-slate-200 dark:border-slate-700 mb-8 pb-2 overflow-x-auto">
             <button @click="step = 1" type="button" class="flex items-center px-4 py-2.5 text-sm font-semibold rounded-t-xl transition-all border-b-2 whitespace-nowrap" :class="step === 1 ? 'text-primary-600 border-primary-600 bg-primary-50 dark:bg-primary-900/30' : 'text-slate-500 border-transparent hover:text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'">
@@ -56,7 +90,7 @@
                 <div class="grid gap-6 mb-6 sm:grid-cols-2">
                     <div>
                         <label for="id_pasien" class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Pasien (NIK/Nama) <span class="text-rose-500">*</span></label>
-                        <select name="id_pasien" id="id_pasien" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:placeholder-slate-400 dark:text-white" required>
+                        <select name="id_pasien" id="id_pasien" @change="selectedPasienId = $event.target.value; selectedPasien = patientsData[$event.target.value] || null" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:placeholder-slate-400 dark:text-white" required>
                             <option value="">-- Pilih Pasien Terdaftar --</option>
                             @foreach($pasiens as $pasien)
                                 <option value="{{ $pasien->id_pasien }}">{{ $pasien->nik }} - {{ $pasien->nama_lengkap }}</option>
@@ -272,9 +306,27 @@
     </div>
 
     <script>
+        const patientsData = {
+            @foreach($pasiens as $pasien)
+            "{{ $pasien->id_pasien }}": {
+                nama: `{!! addslashes($pasien->nama_lengkap) !!}`,
+                umur: `{{ $pasien->umur }} Tahun`,
+                jk: `{{ $pasien->jenis_kelamin }}`,
+                alamat: `{!! addslashes($pasien->dukuhM->nama_dukuh ?? '-') !!}, {!! addslashes($pasien->kelurahan->nama_kelurahan ?? '-') !!}`
+            },
+            @endforeach
+        };
+
         function pemeriksaanTabs() {
             return {
                 step: 1,
+                selectedPasienId: '{{ request("id_pasien") }}',
+                selectedPasien: null,
+                init() {
+                    if (this.selectedPasienId) {
+                        this.selectedPasien = patientsData[this.selectedPasienId] || null;
+                    }
+                },
                 showLab: false,
                 bb: '',
                 tb: '',
@@ -374,13 +426,18 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            new TomSelect('#id_pasien',{
+            let tom = new TomSelect('#id_pasien',{
                 create: false,
                 sortField: {
                     field: "text",
                     direction: "asc"
                 },
                 placeholder: '-- Cari Pasien Terdaftar --'
+            });
+
+            tom.on('change', function(value) {
+                // Dispatch native change event so Alpine.js @change can catch it
+                document.getElementById('id_pasien').dispatchEvent(new Event('change'));
             });
         });
     </script>

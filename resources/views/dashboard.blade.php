@@ -24,10 +24,10 @@
             @endif
             <div>
                 <label class="block mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">Kalurahan</label>
-                <select id="kalurahan" name="kalurahan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                <select id="id_kelurahan" name="id_kelurahan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-slate-900 dark:border-slate-700 dark:text-white">
                     <option value="">Semua Kalurahan</option>
                     @foreach($kalurahans as $kel)
-                        <option value="{{ $kel }}" {{ $filters['kalurahan'] == $kel ? 'selected' : '' }}>{{ $kel }}</option>
+                        <option value="{{ $kel->id_kelurahan }}" {{ $filters['id_kelurahan'] == $kel->id_kelurahan ? 'selected' : '' }}>{{ $kel->nama_kelurahan }}</option>
                     @endforeach
                 </select>
             </div>
@@ -146,35 +146,7 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
-            const puskesmasSelect = document.getElementById('id_puskesmas');
-            const kelurahanSelect = document.getElementById('kalurahan');
-            const oldKalurahan = '{{ request("kalurahan") }}';
 
-            if (puskesmasSelect && kelurahanSelect) {
-                puskesmasSelect.addEventListener('change', function() {
-                    const id = this.value;
-                    kelurahanSelect.innerHTML = '<option value="">-- Memuat --</option>';
-                    
-                    const fetchUrl = id ? `/puskesmas/${id}/kelurahans` : `/kelurahans`;
-                    
-                    fetch(fetchUrl)
-                        .then(res => res.json())
-                        .then(data => {
-                            kelurahanSelect.innerHTML = '<option value="">Semua Kalurahan</option>';
-                            data.forEach(kel => {
-                                const option = document.createElement('option');
-                                option.value = kel.nama_kelurahan;
-                                option.textContent = kel.nama_kelurahan;
-                                if (oldKalurahan === kel.nama_kelurahan) option.selected = true;
-                                kelurahanSelect.appendChild(option);
-                            });
-                        })
-                        .catch(err => {
-                            console.error('Error fetching kalurahan:', err);
-                            kelurahanSelect.innerHTML = '<option value="">Semua Kalurahan</option>';
-                        });
-                });
-            }
 
             const data = @json($grafikData);
             const labels = data.map(item => item.label);
@@ -296,6 +268,30 @@
 
             const trendChart = new ApexCharts(document.getElementById("trend-chart"), trendOptions);
             trendChart.render();
+
+            const puskesmasSelect = document.getElementById('id_puskesmas');
+            const kalurahanSelect = document.getElementById('id_kelurahan');
+            const oldKalurahan = '{{ $filters['id_kelurahan'] ?? "" }}';
+
+            if (puskesmasSelect && kalurahanSelect) {
+                puskesmasSelect.addEventListener('change', function() {
+                    const id = this.value;
+                    const fetchUrl = id ? `/puskesmas/${id}/kelurahans` : `/kelurahans`;
+                    
+                    fetch(fetchUrl)
+                        .then(res => res.json())
+                        .then(data => {
+                            kalurahanSelect.innerHTML = '<option value="">Semua Kalurahan</option>';
+                            data.forEach(kel => {
+                                const option = document.createElement('option');
+                                option.value = kel.id_kelurahan;
+                                option.textContent = kel.nama_kelurahan;
+                                if (oldKalurahan === String(kel.id_kelurahan)) option.selected = true;
+                                kalurahanSelect.appendChild(option);
+                            });
+                        });
+                });
+            }
         });
     </script>
 </x-app-layout>

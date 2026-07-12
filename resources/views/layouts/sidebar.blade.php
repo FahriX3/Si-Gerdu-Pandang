@@ -10,10 +10,7 @@
             </svg>
          </button>
         <a href="{{ route('dashboard') }}" class="flex ms-3 md:me-24 items-center gap-3 group">
-          <div class="bg-white p-1 rounded-lg shadow-sm group-hover:scale-105 transition-transform">
-              <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="w-7 h-7 object-contain" />
-          </div>
-          <span class="self-center text-xl font-bold whitespace-nowrap tracking-tight text-slate-800 dark:text-white">Gerdu<span class="text-primary-600 dark:text-primary-400">Pandang</span></span>
+          <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="h-16 md:h-20 w-auto object-contain group-hover:scale-105 transition-transform" />
         </a>
       </div>
       <div class="flex items-center">
@@ -21,7 +18,7 @@
             <div>
               <button type="button" class="flex items-center gap-3 text-sm rounded-full focus:ring-4 focus:ring-primary-100 dark:focus:ring-slate-700 transition-all p-1 pe-3 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                 <span class="sr-only">Menu Pengguna</span>
-                <div class="w-9 h-9 rounded-full bg-gradient-to-r from-primary-600 to-indigo-600 flex items-center justify-center text-white font-semibold shadow-inner">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                <div class="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center text-white font-semibold shadow-inner">{{ substr(Auth::user()->name, 0, 1) }}</div>
                 <div class="hidden md:block text-left">
                     <div class="text-sm font-medium text-slate-800 dark:text-slate-100 leading-tight">{{ Auth::user()->name }}</div>
                     <div class="text-xs text-slate-500 dark:text-slate-400">{{ ucwords(str_replace('_', ' ', Auth::user()->role)) }}</div>
@@ -125,6 +122,18 @@
             <a href="{{ route('master-pekerjaan.index') }}" class="flex items-center p-2.5 text-slate-700 rounded-xl dark:text-slate-200 hover:bg-slate-100 hover:text-primary-600 dark:hover:bg-slate-800 dark:hover:text-primary-400 transition-all group {{ request()->routeIs('master-pekerjaan.*') ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400 font-semibold' : '' }}">
                <svg class="w-5 h-5 transition-colors {{ request()->routeIs('master-pekerjaan.*') ? 'text-primary-600 dark:text-primary-400' : 'text-slate-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                <span class="flex-1 ms-3 whitespace-nowrap">Master Pekerjaan</span>
+            </a>
+         </li>
+         <li>
+            <a href="{{ route('master-kelurahan.index') }}" class="flex items-center p-2.5 text-slate-700 rounded-xl dark:text-slate-200 hover:bg-slate-100 hover:text-primary-600 dark:hover:bg-slate-800 dark:hover:text-primary-400 transition-all group {{ request()->routeIs('master-kelurahan.*') ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400 font-semibold' : '' }}">
+               <svg class="w-5 h-5 transition-colors {{ request()->routeIs('master-kelurahan.*') ? 'text-primary-600 dark:text-primary-400' : 'text-slate-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+               <span class="flex-1 ms-3 whitespace-nowrap">Master Kalurahan</span>
+            </a>
+         </li>
+         <li>
+            <a href="{{ route('master-dukuh.index') }}" class="flex items-center p-2.5 text-slate-700 rounded-xl dark:text-slate-200 hover:bg-slate-100 hover:text-primary-600 dark:hover:bg-slate-800 dark:hover:text-primary-400 transition-all group {{ request()->routeIs('master-dukuh.*') ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400 font-semibold' : '' }}">
+               <svg class="w-5 h-5 transition-colors {{ request()->routeIs('master-dukuh.*') ? 'text-primary-600 dark:text-primary-400' : 'text-slate-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+               <span class="flex-1 ms-3 whitespace-nowrap">Master Dukuh</span>
             </a>
          </li>
          <li>

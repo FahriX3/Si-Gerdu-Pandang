@@ -51,8 +51,8 @@
                         @error('nik') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Nomor Kartu Keluarga (KK) <span class="text-rose-500">*</span></label>
-                        <input type="text" name="no_kk" maxlength="16" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required value="{{ old('no_kk', $pasien->no_kk) }}">
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Nomor Kartu Keluarga (KK) <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                        <input type="text" name="no_kk" maxlength="16" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" value="{{ old('no_kk', $pasien->no_kk) }}">
                         @error('no_kk') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>
                     <div>
@@ -66,8 +66,8 @@
                         <input type="text" name="nama_lengkap" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required value="{{ old('nama_lengkap', $pasien->nama_lengkap) }}">
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Kepala Keluarga <span class="text-rose-500">*</span></label>
-                        <input type="text" name="nama_kepala_keluarga" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required value="{{ old('nama_kepala_keluarga', $pasien->nama_kepala_keluarga) }}">
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Kepala Keluarga <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                        <input type="text" name="nama_kepala_keluarga" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" value="{{ old('nama_kepala_keluarga', $pasien->nama_kepala_keluarga) }}">
                     </div>
 
                     <div>
@@ -92,18 +92,21 @@
                 <div class="grid gap-6 sm:grid-cols-3">
                     <div class="sm:col-span-3">
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Kalurahan / Desa <span class="text-rose-500">*</span></label>
-                        <select name="kalurahan" id="kalurahan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
+                        <select name="id_kelurahan" id="id_kelurahan" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
                             <option value="">-- Pilih Kalurahan --</option>
                             @if(auth()->user()->role !== 'admin_dinkes' && isset($kelurahans))
                                 @foreach($kelurahans as $kel)
-                                    <option value="{{ $kel->nama_kelurahan }}" {{ old('kalurahan', $pasien->kalurahan) == $kel->nama_kelurahan ? 'selected' : '' }}>{{ $kel->nama_kelurahan }}</option>
+                                    <option value="{{ $kel->id_kelurahan }}" {{ old('id_kelurahan', $pasien->id_kelurahan) == $kel->id_kelurahan ? 'selected' : '' }}>{{ $kel->nama_kelurahan }}</option>
                                 @endforeach
                             @endif
                         </select>
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Dusun / Dukuh</label>
-                        <input type="text" name="dukuh" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" value="{{ old('dukuh', $pasien->dukuh) }}">
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Dusun / Dukuh <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                        <select name="id_dukuh" id="id_dukuh" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                            <option value="">-- Pilih Dukuh --</option>
+                            <!-- Options populated by JS -->
+                        </select>
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">RT</label>
@@ -159,8 +162,8 @@
                     </div>
 
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Jenis Pekerjaan <span class="text-rose-500">*</span></label>
-                        <select name="jenis_pekerjaan" id="pekerjaan-select" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white" required>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Jenis Pekerjaan <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                        <select name="jenis_pekerjaan" id="pekerjaan-select" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white">
                               <option value="">-- Pilih Pekerjaan --</option>
                               @foreach($pekerjaans as $pkj)
                                   <option value="{{ $pkj->nama_pekerjaan }}" {{ old('jenis_pekerjaan', $pasien->jenis_pekerjaan ?? '') == $pkj->nama_pekerjaan ? 'selected' : '' }}>{{ $pkj->nama_pekerjaan }}</option>
@@ -215,29 +218,66 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const puskesmasSelect = document.getElementById('id_puskesmas');
-            const kelurahanSelect = document.getElementById('kalurahan');
-            const oldKalurahan = '{{ old("kalurahan", $pasien->kalurahan) }}';
+            const kalurahanSelect = document.getElementById('id_kelurahan');
+            const oldKalurahan = '{{ old("id_kelurahan", $pasien->id_kelurahan) }}';
+            const dukuhSelect = document.getElementById('id_dukuh');
+            const oldDukuh = '{{ old("id_dukuh", $pasien->id_dukuh) }}';
+
+            function fetchDukuhs(idKelurahan) {
+                if (!idKelurahan) {
+                    dukuhSelect.innerHTML = '<option value="">-- Pilih Dukuh --</option>';
+                    return;
+                }
+                
+                fetch(`/pasien/dukuhs?kelurahan=${encodeURIComponent(idKelurahan)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        dukuhSelect.innerHTML = '<option value="">-- Pilih Dukuh --</option>';
+                        data.forEach(d => {
+                            const option = document.createElement('option');
+                            option.value = d.id_dukuh;
+                            option.textContent = d.nama_dukuh;
+                            if (oldDukuh === d.id_dukuh) option.selected = true;
+                            dukuhSelect.appendChild(option);
+                        });
+                    });
+            }
+
+            if (kalurahanSelect) {
+                kalurahanSelect.addEventListener('change', function() {
+                    fetchDukuhs(this.value);
+                });
+                
+                // Load initial data if editing/old input exists
+                if (kalurahanSelect.value) {
+                    fetchDukuhs(kalurahanSelect.value);
+                }
+            }
 
             if (puskesmasSelect) {
                 puskesmasSelect.addEventListener('change', function() {
                     const id = this.value;
-                    kelurahanSelect.innerHTML = '<option value="">-- Memuat --</option>';
+                    kalurahanSelect.innerHTML = '<option value="">-- Memuat --</option>';
                     
                     if (id) {
                         fetch(`/puskesmas/${id}/kelurahans`)
                             .then(res => res.json())
                             .then(data => {
-                                kelurahanSelect.innerHTML = '<option value="">-- Pilih Kalurahan --</option>';
+                                kalurahanSelect.innerHTML = '<option value="">-- Pilih Kalurahan --</option>';
                                 data.forEach(kel => {
                                     const option = document.createElement('option');
-                                    option.value = kel.nama_kelurahan;
+                                    option.value = kel.id_kelurahan;
                                     option.textContent = kel.nama_kelurahan;
-                                    if (oldKalurahan === kel.nama_kelurahan) option.selected = true;
-                                    kelurahanSelect.appendChild(option);
+                                    if (oldKalurahan === String(kel.id_kelurahan)) option.selected = true;
+                                    kalurahanSelect.appendChild(option);
                                 });
+                                // trigger change if there is a selected value so dukuh is fetched
+                                if(kalurahanSelect.value) {
+                                    kalurahanSelect.dispatchEvent(new Event('change'));
+                                }
                             });
                     } else {
-                        kelurahanSelect.innerHTML = '<option value="">-- Pilih Puskesmas Terlebih Dahulu --</option>';
+                        kalurahanSelect.innerHTML = '<option value="">-- Pilih Puskesmas Terlebih Dahulu --</option>';
                     }
                 });
 

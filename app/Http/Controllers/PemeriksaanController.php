@@ -41,7 +41,7 @@ class PemeriksaanController extends Controller
     public function create(Request $request)
     {
         // For the autocomplete
-        $pasiens = Pasien::with('puskesmas')->select('id_pasien', 'nama_lengkap', 'nik', 'id_puskesmas')->get();
+        $pasiens = Pasien::with(['puskesmas', 'kelurahan', 'dukuhM'])->get();
         $obats = \App\Models\MasterObat::orderBy('nama_obat')->get();
         $puskesmas = auth()->user()->role === 'admin_dinkes' ? \App\Models\MasterPuskesmas::orderBy('nama_puskesmas')->get() : collect();
         return view('pemeriksaan.create', compact('pasiens', 'obats', 'puskesmas'));

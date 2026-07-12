@@ -66,7 +66,7 @@
         </tr>
         <tr>
             <td class="label">Alamat / Domisili</td>
-            <td colspan="3">: {{ $pasien->dukuh ? 'Dusun '.$pasien->dukuh : '' }} {{ $pasien->rt ? 'RT '.$pasien->rt : '' }}{{ $pasien->rw ? '/RW '.$pasien->rw : '' }}, Kalurahan {{ $pasien->kalurahan }}</td>
+            <td colspan="3">: {{ $pasien->dukuhM ? 'Dusun '.$pasien->dukuhM->nama_dukuh : '' }} {{ $pasien->rt ? 'RT '.$pasien->rt : '' }}{{ $pasien->rw ? '/RW '.$pasien->rw : '' }}, Kalurahan {{ $pasien->kelurahan->nama_kelurahan ?? '-' }}</td>
         </tr>
     </table>
 
