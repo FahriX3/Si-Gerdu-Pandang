@@ -10,7 +10,7 @@
 
     <!-- Filters Section -->
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-8 dark:bg-slate-800 dark:border-slate-700/60">
-        <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
             @if(Auth::user()->role === 'admin_dinkes')
             <div>
                 <label class="block mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">Puskesmas</label>
@@ -28,6 +28,15 @@
                     <option value="">Semua Kalurahan</option>
                     @foreach($kalurahans as $kel)
                         <option value="{{ $kel->id_kelurahan }}" {{ $filters['id_kelurahan'] == $kel->id_kelurahan ? 'selected' : '' }}>{{ $kel->nama_kelurahan }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">Kelompok GP</label>
+                <select id="id_kelompok_gp" name="id_kelompok_gp" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                    <option value="">Semua Kelompok GP</option>
+                    @foreach($kelompokGps as $gp)
+                        <option value="{{ $gp->id_kelompok_gp }}" {{ $filters['id_kelompok_gp'] == $gp->id_kelompok_gp ? 'selected' : '' }}>{{ $gp->nama_kelompok_gp }}</option>
                     @endforeach
                 </select>
             </div>

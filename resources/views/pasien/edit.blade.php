@@ -82,6 +82,15 @@
                             <option value="Perempuan" {{ old('jenis_kelamin', $pasien->jenis_kelamin) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                     </div>
+                    <div class="sm:col-span-2">
+                        <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Kelompok Gerdu Pandang <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                        <select name="id_kelompok_gp" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                            <option value="">-- Pilih Kelompok GP --</option>
+                            @foreach($kelompokGps as $gp)
+                                <option value="{{ $gp->id_kelompok_gp }}" {{ old('id_kelompok_gp', $pasien->id_kelompok_gp) == $gp->id_kelompok_gp ? 'selected' : '' }}>{{ $gp->nama_kelompok_gp }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
 

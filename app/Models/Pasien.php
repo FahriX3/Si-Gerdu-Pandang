@@ -20,7 +20,7 @@ class Pasien extends Model
         'nik', 'no_kk', 'no_rm', 'nama_kepala_keluarga', 'status_peserta',
         'tanggal_meninggal', 'id_kelurahan', 'id_dukuh', 'rt', 'rw', 'no_hp',
         'no_jkn', 'tanggal_awal_terdaftar', 'jenis_prolanis', 'status_peserta_prb',
-        'riwayat_hipertensi_keluarga', 'jenis_pekerjaan', 'status_merokok'
+        'riwayat_hipertensi_keluarga', 'jenis_pekerjaan', 'status_merokok', 'id_kelompok_gp'
     ];
 
     protected $casts = [
@@ -55,6 +55,11 @@ class Pasien extends Model
     public function pemeriksaans(): HasMany
     {
         return $this->hasMany(Pemeriksaan::class, 'id_pasien', 'id_pasien');
+    }
+
+    public function kelompokGp(): BelongsTo
+    {
+        return $this->belongsTo(MasterKelompokGp::class, 'id_kelompok_gp', 'id_kelompok_gp');
     }
     
     protected static function booted()

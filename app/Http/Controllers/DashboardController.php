@@ -24,6 +24,12 @@ class DashboardController extends Controller
                 $q->where('id_kelurahan', $request->id_kelurahan);
             });
         }
+        if ($request->filled('id_kelompok_gp')) {
+            $pasienQuery->where('pasiens.id_kelompok_gp', $request->id_kelompok_gp);
+            $pemeriksaanQuery->whereHas('pasien', function($q) use ($request) {
+                $q->where('id_kelompok_gp', $request->id_kelompok_gp);
+            });
+        }
         if ($request->filled('tahun')) {
             $pasienQuery->whereYear('pasiens.tanggal_awal_terdaftar', $request->tahun);
             $pemeriksaanQuery->whereYear('tanggal_pemeriksaan', $request->tahun);
@@ -52,6 +58,11 @@ class DashboardController extends Controller
         if ($request->filled('id_kelurahan')) {
             $htQuery->whereHas('pasien', function($q) use ($request) {
                 $q->where('id_kelurahan', $request->id_kelurahan);
+            });
+        }
+        if ($request->filled('id_kelompok_gp')) {
+            $htQuery->whereHas('pasien', function($q) use ($request) {
+                $q->where('id_kelompok_gp', $request->id_kelompok_gp);
             });
         }
 
@@ -90,6 +101,11 @@ class DashboardController extends Controller
                 $q->where('id_kelurahan', $request->id_kelurahan);
             });
         }
+        if ($request->filled('id_kelompok_gp')) {
+            $trendQuery->whereHas('pasien', function($q) use ($request) {
+                $q->where('id_kelompok_gp', $request->id_kelompok_gp);
+            });
+        }
         
         $pemeriksaanTrend = $trendQuery->whereYear('tanggal_pemeriksaan', $tahun)
             ->select(DB::raw('MONTH(tanggal_pemeriksaan) as bulan'), DB::raw('count(id_pemeriksaan) as total'))
@@ -119,10 +135,13 @@ class DashboardController extends Controller
         $filters = [
             'id_puskesmas' => $request->id_puskesmas,
             'id_kelurahan' => $request->id_kelurahan,
+            'id_kelompok_gp' => $request->id_kelompok_gp,
             'tahun' => $tahun,
         ];
 
-        return view('dashboard', compact('totalPasien', 'totalPemeriksaan', 'pasienHipertensiTidakTerkontrol', 'grafikData', 'trendValues', 'puskesmas', 'kalurahans', 'filters'));
+        $kelompokGps = \App\Models\MasterKelompokGp::orderBy('nama_kelompok_gp')->get();
+
+        return view('dashboard', compact('totalPasien', 'totalPemeriksaan', 'pasienHipertensiTidakTerkontrol', 'grafikData', 'trendValues', 'puskesmas', 'kalurahans', 'filters', 'kelompokGps'));
     }
 
     public function exportPdf(Request $request)
@@ -146,6 +165,11 @@ class DashboardController extends Controller
         if ($request->filled('id_kelurahan')) {
             $htQuery->whereHas('pasien', function($q) use ($request) {
                 $q->where('id_kelurahan', $request->id_kelurahan);
+            });
+        }
+        if ($request->filled('id_kelompok_gp')) {
+            $htQuery->whereHas('pasien', function($q) use ($request) {
+                $q->where('id_kelompok_gp', $request->id_kelompok_gp);
             });
         }
 

@@ -46,7 +46,8 @@ class PasienController extends Controller
             $kelurahans = \App\Models\MasterKelurahan::where('id_puskesmas', auth()->user()->id_puskesmas)->get();
         }
         $pekerjaans = MasterPekerjaan::orderBy('nama_pekerjaan')->get();
-        return view('pasien.create', compact('puskesmas', 'kelurahans', 'pekerjaans'));
+        $kelompokGps = \App\Models\MasterKelompokGp::orderBy('nama_kelompok_gp')->get();
+        return view('pasien.create', compact('puskesmas', 'kelurahans', 'pekerjaans', 'kelompokGps'));
     }
 
     public function store(Request $request)
@@ -74,6 +75,7 @@ class PasienController extends Controller
             'riwayat_hipertensi_keluarga' => 'required|in:Ya,Tidak,Tidak Tahu',
             'jenis_pekerjaan' => 'nullable|string|max:255',
             'status_merokok' => 'required|in:Merokok,Tidak Merokok,Sudah Berhenti Merokok',
+            'id_kelompok_gp' => 'nullable|exists:master_kelompok_gps,id_kelompok_gp',
         ];
 
         if (auth()->user()->role === 'admin_dinkes') {
@@ -107,11 +109,16 @@ class PasienController extends Controller
     public function edit(Pasien $pasien)
     {
         $puskesmas = [];
+        $kelurahans = [];
+        $dukuhs = [];
         if (auth()->user()->role === 'admin_dinkes') {
             $puskesmas = MasterPuskesmas::all();
         }
+        $kelurahans = \App\Models\MasterKelurahan::where('id_puskesmas', $pasien->id_puskesmas)->get();
+        $dukuhs = \App\Models\MasterDukuh::where('id_kelurahan', $pasien->id_kelurahan)->get();
         $pekerjaans = MasterPekerjaan::orderBy('nama_pekerjaan')->get();
-        return view('pasien.edit', compact('pasien', 'puskesmas', 'pekerjaans'));
+        $kelompokGps = \App\Models\MasterKelompokGp::orderBy('nama_kelompok_gp')->get();
+        return view('pasien.edit', compact('pasien', 'puskesmas', 'kelurahans', 'dukuhs', 'pekerjaans', 'kelompokGps'));
     }
 
     public function update(Request $request, Pasien $pasien)
@@ -139,6 +146,7 @@ class PasienController extends Controller
             'riwayat_hipertensi_keluarga' => 'required|in:Ya,Tidak,Tidak Tahu',
             'jenis_pekerjaan' => 'nullable|string|max:255',
             'status_merokok' => 'required|in:Merokok,Tidak Merokok,Sudah Berhenti Merokok',
+            'id_kelompok_gp' => 'nullable|exists:master_kelompok_gps,id_kelompok_gp',
         ];
 
         if (auth()->user()->role === 'admin_dinkes') {

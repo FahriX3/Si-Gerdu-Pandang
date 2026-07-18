@@ -27,6 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('master-kelurahan', \App\Http\Controllers\MasterKelurahanController::class)->except(['create', 'show', 'edit']);
         Route::resource('master-dukuh', \App\Http\Controllers\MasterDukuhController::class)->except(['create', 'show', 'edit']);
         Route::resource('master-diagnosis', \App\Http\Controllers\MasterDiagnosisController::class)->except(['create', 'show', 'edit']);
+        Route::resource('master-kelompok-gp', \App\Http\Controllers\MasterKelompokGpController::class)->except(['create', 'show', 'edit']);
     });
 
     Route::get('/pasien/{pasien}/print', [PasienController::class, 'printPdf'])->name('pasien.print');

@@ -143,6 +143,12 @@
             </a>
          </li>
          <li>
+            <a href="{{ route('master-kelompok-gp.index') }}" class="flex items-center p-2.5 text-slate-700 rounded-xl dark:text-slate-200 hover:bg-slate-100 hover:text-primary-600 dark:hover:bg-slate-800 dark:hover:text-primary-400 transition-all group {{ request()->routeIs('master-kelompok-gp.*') ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400 font-semibold' : '' }}">
+               <svg class="w-5 h-5 transition-colors {{ request()->routeIs('master-kelompok-gp.*') ? 'text-primary-600 dark:text-primary-400' : 'text-slate-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+               <span class="flex-1 ms-3 whitespace-nowrap">Master Kelompok GP</span>
+            </a>
+         </li>
+         <li>
             <a href="{{ route('users.index') }}" class="flex items-center p-2.5 text-slate-700 rounded-xl dark:text-slate-200 hover:bg-slate-100 hover:text-primary-600 dark:hover:bg-slate-800 dark:hover:text-primary-400 transition-all group {{ request()->routeIs('users.*') ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400 font-semibold' : '' }}">
                <svg class="w-5 h-5 transition-colors {{ request()->routeIs('users.*') ? 'text-primary-600 dark:text-primary-400' : 'text-slate-400 group-hover:text-primary-600 dark:group-hover:text-primary-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                <span class="flex-1 ms-3 whitespace-nowrap">Master Pengguna</span>
