@@ -106,7 +106,7 @@
                 @csrf
                 <div class="mb-4">
                     <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Kelompok GP</label>
-                    <input type="text" name="nama_kelompok_gp" placeholder="Contoh: HT Terkontrol" required class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                    <input type="text" name="nama_kelompok_gp" placeholder="Contoh: GP Jangkaran" required class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white">
                 </div>
                 <div class="flex justify-end gap-3 mt-6">
                     <button type="button" onclick="document.getElementById('addModal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50">Batal</button>
@@ -130,7 +130,7 @@
                 @method('PUT')
                 <div class="mb-4">
                     <label class="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Kelompok GP</label>
-                    <input type="text" name="nama_kelompok_gp" id="edit_nama_kelompok_gp" required class="bg-white border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-3 shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                    <input type="text" name="nama_kelompok_gp" id="edit_nama_kelompok_gp" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-slate-900 dark:border-slate-700 dark:text-white" placeholder="Contoh: GP Jangkaran" required>
                 </div>
                 <div class="flex justify-end gap-3 mt-6">
                     <button type="button" onclick="document.getElementById('editModal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50">Batal</button>
